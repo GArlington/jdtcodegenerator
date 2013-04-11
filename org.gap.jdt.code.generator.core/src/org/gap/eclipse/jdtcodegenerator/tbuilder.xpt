@@ -1,0 +1,4 @@
+«DEFINE model FOR org::gap::eclipse::jdtcodegenerator::BuilderModel»
+	«FILE this.name + ".java"»
+	«ENDFILE»
+«ENDDEFINE»
