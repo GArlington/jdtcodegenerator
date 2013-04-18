@@ -12,6 +12,8 @@ public class JavaBeanProperty {
 
     private final String name, setterName, getterName;
 
+    private final Class<?> type;
+
     /**
      * Creates a new property instance with the given parameters.
      * 
@@ -22,9 +24,10 @@ public class JavaBeanProperty {
      * @param getterName The getter method name. Empty string if the getter
      *        method is not available.
      */
-    public JavaBeanProperty(boolean mutable, String name, String setterName, String getterName) {
+    public JavaBeanProperty(boolean mutable, String name, Class<?> type, String setterName, String getterName) {
         this.mutable = mutable;
         this.name = name;
+        this.type = type;
         this.setterName = setterName;
         this.getterName = getterName;
     }
@@ -65,6 +68,15 @@ public class JavaBeanProperty {
         return setterName;
     }
 
+    /**
+     * Returns the type of the property.
+     * 
+     * @return The class object representing the type of the property.
+     */
+    public Class<?> getType() {
+        return type;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -88,6 +100,11 @@ public class JavaBeanProperty {
         } else if (!name.equals(other.name))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "JavaBeanProperty [name=" + name + "]";
     }
 
 }

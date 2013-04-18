@@ -18,18 +18,15 @@ public class JavaBeanModelFactory {
 
     /**
      * Creates a {@link JavaBeanModel} for generating a builder class. This will
-     * populate the model with the following <br>
-     * <ul>
-     * <li>Public Setter methods (Including inherited)</li>
-     * <li>Public fields (Mutable)</li>
-     * </ul>
+     * populate the model in the standard java bean introspection.
      * 
-     * @param clazz The class which needs to be analyzed for builder generation.
+     * @param clazz The class which needs to be analyzed.
      * @return A populated model.
      * @throws ModelCreationException If an error occurred while creating the
      *         model.
+     * @see Introspector
      */
-    public JavaBeanModel createModelForBuilderClass(Class<?> clazz) throws ModelCreationException {
+    public JavaBeanModel createModelForStandardBean(Class<?> clazz) throws ModelCreationException {
         try {
             // Following code handles classes which are written to the java bean standard. 
             final BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
@@ -39,7 +36,7 @@ public class JavaBeanModelFactory {
             for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                 if (propertyDescriptor.getWriteMethod() != null) {
                     beanProperties.add(new JavaBeanProperty(true, propertyDescriptor.getName(), propertyDescriptor
-                            .getWriteMethod().getName(), ""));
+                            .getPropertyType(), propertyDescriptor.getWriteMethod().getName(), ""));
                 }
             }
 
