@@ -4,6 +4,8 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +20,7 @@ public class JavaBeanModelFactory {
 
     /**
      * Creates a {@link JavaBeanModel} for generating a builder class. This will
-     * populate the model in the standard java bean introspection.
+     * populate the model using standard java bean introspection.
      * 
      * @param clazz The class which needs to be analyzed.
      * @return A populated model.
@@ -46,6 +48,30 @@ public class JavaBeanModelFactory {
             throw new ModelCreationException(
                     "An error occurred while generating JavaBeanModel for builder generation.", ex);
         }
+    }
+
+    /**
+     * Creates a {@link JavaBeanModel} for generating a builder class. This will
+     * populate the model using public mutable fields in the given class. This
+     * is used for creating builders for legacy value objects.
+     * 
+     * @param clazz The class which needs to be analyzed.
+     * @return A populated model.
+     * @throws ModelCreationException If an error occurred while creating the
+     *         model.
+     */
+    public JavaBeanModel createModelForPublicFieldProperties(Class<?> clazz) throws ModelCreationException {
+
+        final Field[] allFields = clazz.getFields();
+        final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
+
+        for (Field field : allFields) {
+            if (!(Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers()))) {
+                beanProperties.add(new JavaBeanProperty(true, field.getName(), field.getType(), "", ""));
+            }
+        }
+
+        return new JavaBeanModelImpl(clazz.getSimpleName(), clazz.getPackage().getName(), beanProperties);
     }
 
 }
