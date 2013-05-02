@@ -8,5 +8,10 @@ public class PublicFieldSampleBean {
     public int age;
 
     public Locale locale;
+    
+    public static PublicFieldSampleBean instance;
 
+    public static final String constant = "CONST";
+
+    public final String finalOnly = "Final";
 }
