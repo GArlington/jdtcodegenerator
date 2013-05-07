@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.source.menu?after=additions">
+         <menu
+               id="org.gap.jdt.code.generator.core.generators.menu"
+               label="Code Generators">
+            <command
+                  commandId="org.gap.jdt.code.generator.core.commands.publicfieldbuilder"
+                  label="Sample Menu"
+                  style="push">
+            </command>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate
+                           ifEmpty="false"
+                           operator="or">
+                        <instanceof
+                              value="org.eclipse.jdt.core.ICompilationUnit">
+                        </instanceof>
+                     </iterate>
+                  </and>
+               </with>
+            </visibleWhen>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.gap.eclipse.jdtcodegenerator.commands.GenerateBuilderPublicFields"
+            id="org.gap.jdt.code.generator.core.commands.publicfieldbuilder"
+            name="Generate Builder (Public Fields)">
+      </command>
+   </extension>
+
+</plugin>
