@@ -1,12 +1,16 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 
 /**
  * Factory class which contains factory methods to create {@link JavaBeanModel}
@@ -18,60 +22,82 @@ import java.util.ArrayList;
  */
 public class JavaBeanModelFactory {
 
+    private final Pattern setterPattern = Pattern.compile("^set(.*)$");
+
     /**
      * Creates a {@link JavaBeanModel} for generating a builder class. This will
-     * populate the model using standard java bean introspection.
+     * populate the model using setter methods with a single parameter.
      * 
-     * @param clazz The class which needs to be analyzed.
+     * @param compilationUnit The java source file which needs to be analyzed.
      * @return A populated model.
      * @throws ModelCreationException If an error occurred while creating the
      *         model.
-     * @see Introspector
      */
-    public JavaBeanModel createModelForStandardBean(Class<?> clazz) throws ModelCreationException {
+    public JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit) throws ModelCreationException {
         try {
-            // Following code handles classes which are written to the java bean standard. 
-            final BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-            final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(
-                    propertyDescriptors.length);
-            for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-                if (propertyDescriptor.getWriteMethod() != null) {
-                    beanProperties.add(new JavaBeanProperty(true, propertyDescriptor.getName(), propertyDescriptor
-                            .getPropertyType(), propertyDescriptor.getWriteMethod().getName(), ""));
+            final IType classType = compilationUnit.getAllTypes()[0];
+            final IMethod[] allMethods = classType.getMethods();
+            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allMethods.length);
+
+            for (IMethod method : allMethods) {
+                if (!Flags.isStatic(method.getFlags()) && Flags.isPublic(method.getFlags())
+                        && (method.getParameterTypes().length == 1)) {
+                    // Lets check the pattern and extract the name.
+                    final Matcher matcher = setterPattern.matcher(method.getElementName());
+                    if (matcher.matches()) {
+                        final StringBuilder nameBuilder = new StringBuilder(matcher.group(1));
+                        nameBuilder.replace(0, 1, nameBuilder.substring(0, 1).toLowerCase());
+
+                        beanProperties.add(new JavaBeanProperty(true, nameBuilder.toString(), Signature.toString(method
+                                .getParameterTypes()[0]), method.getElementName(), ""));
+                    }
                 }
             }
 
-            return new JavaBeanModelImpl(clazz.getSimpleName(), clazz.getPackage().getName(), beanProperties);
-
-        } catch (final IntrospectionException ex) {
-            throw new ModelCreationException(
-                    "An error occurred while generating JavaBeanModel for builder generation.", ex);
+            return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
+                    beanProperties);
+        } catch (JavaModelException ex) {
+            throw new ModelCreationException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new ModelCreationException(ex);
         }
     }
 
     /**
      * Creates a {@link JavaBeanModel} for generating a builder class. This will
-     * populate the model using public mutable fields in the given class. This
-     * is used for creating builders for legacy value objects.
+     * populate the model using public mutable fields in the given source file.
+     * This can be used for creating builders for legacy value objects. <br>
+     * <br>
+     * <b>Note : </b> Only the first class definition will be processed if the
+     * source file contains multiple class definitions.
      * 
-     * @param clazz The class which needs to be analyzed.
+     * @param compilationUnit The java source file which needs to be analyzed.
      * @return A populated model.
      * @throws ModelCreationException If an error occurred while creating the
      *         model.
      */
-    public JavaBeanModel createModelForPublicFieldProperties(Class<?> clazz) throws ModelCreationException {
+    public JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit)
+            throws ModelCreationException {
 
-        final Field[] allFields = clazz.getFields();
-        final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
+        try {
+            final IType classType = compilationUnit.getAllTypes()[0];
+            final IField[] allFields = classType.getFields();
+            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
 
-        for (Field field : allFields) {
-            if (!(Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers()))) {
-                beanProperties.add(new JavaBeanProperty(true, field.getName(), field.getType(), "", ""));
+            for (IField field : allFields) {
+                if (!Flags.isFinal(field.getFlags()) && !Flags.isStatic(field.getFlags())
+                        && Flags.isPublic(field.getFlags())) {
+                    beanProperties.add(new JavaBeanProperty(true, field.getElementName(), Signature.toString(field
+                            .getTypeSignature()), "", ""));
+                }
             }
+
+            return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
+                    beanProperties);
+        } catch (JavaModelException ex) {
+            throw new ModelCreationException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new ModelCreationException(ex);
         }
-
-        return new JavaBeanModelImpl(clazz.getSimpleName(), clazz.getPackage().getName(), beanProperties);
     }
-
 }

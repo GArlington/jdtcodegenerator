@@ -12,19 +12,20 @@ public class JavaBeanProperty {
 
     private final String name, setterName, getterName;
 
-    private final Class<?> type;
+    private final String type;
 
     /**
      * Creates a new property instance with the given parameters.
      * 
      * @param mutable Flags whether the property is mutable.
      * @param name The name of the property.
+     * @param type The type of the property.
      * @param setterName The setter method name. Empty string if the setter
      *        method is not available.
      * @param getterName The getter method name. Empty string if the getter
      *        method is not available.
      */
-    public JavaBeanProperty(boolean mutable, String name, Class<?> type, String setterName, String getterName) {
+    public JavaBeanProperty(boolean mutable, String name, String type, String setterName, String getterName) {
         this.mutable = mutable;
         this.name = name;
         this.type = type;
@@ -73,7 +74,7 @@ public class JavaBeanProperty {
      * 
      * @return The class object representing the type of the property.
      */
-    public Class<?> getType() {
+    public String getType() {
         return type;
     }
 
