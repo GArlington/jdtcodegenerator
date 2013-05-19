@@ -2,7 +2,7 @@ package org.gap.eclipse.jdtcodegenerator.model;
 
 /**
  * Signals the model creation failed due to an error in
- * {@link JavaBeanModelFactory}.
+ * {@link JavaBeanModelFactoryImpl}.
  * 
  * @author gayanper
  * 

@@ -22,7 +22,7 @@ public class JavaBeanModelFactoryTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        javaBeanModelFactory = new JavaBeanModelFactory();
+        javaBeanModelFactory = new JavaBeanModelFactoryImpl();
     }
 
     @Test
