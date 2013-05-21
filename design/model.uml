@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_8qbcwLAgEeKX0tMlj0jc7Q" name="model">
+  <packagedElement xmi:type="uml:Model" xmi:id="_UWGW4LDcEeKexduuYOudZw" name="generated"/>
+  <packagedElement xmi:type="uml:Model" xmi:id="_YYoYMLDcEeKexduuYOudZw" name="java">
+    <packagedElement xmi:type="uml:Package" xmi:id="_YYo_QLDcEeKexduuYOudZw" name="java">
+      <packagedElement xmi:type="uml:Package" xmi:id="_YYo_QbDcEeKexduuYOudZw" name="lang">
+        <packagedElement xmi:type="uml:Class" xmi:id="_YYo_QrDcEeKexduuYOudZw" name="String"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_Bwz8ALJ3EeKVn5dRtNGJBQ" name="Class"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_Bw5bkLJ3EeKVn5dRtNGJBQ" name="Object"/>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_YYhDcLDcEeKexduuYOudZw" name="org">
+    <packagedElement xmi:type="uml:Package" xmi:id="_YYhDcbDcEeKexduuYOudZw" name="gap">
+      <packagedElement xmi:type="uml:Package" xmi:id="_YYhDcrDcEeKexduuYOudZw" name="eclipse">
+        <packagedElement xmi:type="uml:Package" xmi:id="_YYhDc7DcEeKexduuYOudZw" name="jdtcodegenerator">
+          <packagedElement xmi:type="uml:Package" xmi:id="_YYhqgLDcEeKexduuYOudZw" name="model">
+            <packagedElement xmi:type="uml:Interface" xmi:id="_YYi4oLDcEeKexduuYOudZw" clientDependency="_YuN80LKAEeKz4YDFhnrcsg" name="JavaBeanModel">
+              <ownedComment xmi:id="_YYjfsLDcEeKexduuYOudZw">
+                <body>
+ * Defines the java bean model interface which can be used as a model for code
+ * generation.
+ * 
+ * @author gayan.perera
+ * 
+ </body>
+              </ownedComment>
+              <ownedOperation xmi:id="_YYkt0LDcEeKexduuYOudZw" name="getClassName">
+                <ownedComment xmi:id="_YYkt0bDcEeKexduuYOudZw">
+                  <body>
+     * Returns the bean name, which is the simple class name of the java class
+     * this model instance represents.
+     * 
+     * @return The name of the class as string.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_YYqNYLDcEeKexduuYOudZw" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_YYq0cLDcEeKexduuYOudZw" name="getPackageName">
+                <ownedComment xmi:id="_YYq0cbDcEeKexduuYOudZw">
+                  <body>
+     * Returns the name of the package which the class represented by this model
+     * is in.
+     * 
+     * @return The package name as string.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_YYrbgLDcEeKexduuYOudZw" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_YYrbgbDcEeKexduuYOudZw" name="getProperties">
+                <ownedComment xmi:id="_YYsCkLDcEeKexduuYOudZw">
+                  <body>
+     * Returns all bean properties in the class which represented by this model.
+     * 
+     * @return A list of JavaBeanProperty instances.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_YYspoLDcEeKexduuYOudZw" direction="return">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_YYtQsLDcEeKexduuYOudZw"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_YYue0LDcEeKexduuYOudZw" value="*"/>
+                </ownedParameter>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_Bww4sLJ3EeKVn5dRtNGJBQ" name="JavaBeanProperty">
+              <ownedComment xmi:id="_BwxfwLJ3EeKVn5dRtNGJBQ">
+                <body>
+ * This class represents a java bean property.
+ * 
+ * @author gayanper
+ * 
+ </body>
+              </ownedComment>
+              <ownedAttribute xmi:id="_BwyG0rJ3EeKVn5dRtNGJBQ" name="mutable" visibility="private" isLeaf="true" type="_BwyG0bJ3EeKVn5dRtNGJBQ" isUnique="false"/>
+              <ownedAttribute xmi:id="_Bwyt4LJ3EeKVn5dRtNGJBQ" name="name" visibility="private" isLeaf="true" type="_YYo_QrDcEeKexduuYOudZw" isUnique="false"/>
+              <ownedAttribute xmi:id="_BwzU8LJ3EeKVn5dRtNGJBQ" name="setterName" visibility="private" isLeaf="true" type="_YYo_QrDcEeKexduuYOudZw" isUnique="false"/>
+              <ownedAttribute xmi:id="_BwzU8bJ3EeKVn5dRtNGJBQ" name="getterName" visibility="private" isLeaf="true" type="_YYo_QrDcEeKexduuYOudZw" isUnique="false"/>
+              <ownedAttribute xmi:id="_Bw0jELJ3EeKVn5dRtNGJBQ" name="type" visibility="private" isLeaf="true" type="_Bwz8ALJ3EeKVn5dRtNGJBQ" isUnique="false"/>
+              <ownedOperation xmi:id="_Bw1KILJ3EeKVn5dRtNGJBQ" name="getName" visibility="public">
+                <ownedComment xmi:id="_Bw1KIbJ3EeKVn5dRtNGJBQ">
+                  <body>
+     * Returns the name of the property.
+     * 
+     * @return name of the property which will not be null.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_Bw1xMLJ3EeKVn5dRtNGJBQ" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw1xMbJ3EeKVn5dRtNGJBQ" name="isMutable" visibility="public">
+                <ownedComment xmi:id="_Bw1xMrJ3EeKVn5dRtNGJBQ">
+                  <body>
+     * Returns whether this property represents a mutable property.
+     * 
+     * @return &lt;code>true&lt;/code> if the property is mutable.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_Bw2YQLJ3EeKVn5dRtNGJBQ" type="_BwyG0bJ3EeKVn5dRtNGJBQ" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw2YQbJ3EeKVn5dRtNGJBQ" name="getGetterName" visibility="public">
+                <ownedComment xmi:id="_Bw2YQrJ3EeKVn5dRtNGJBQ">
+                  <body>
+     * Returns the getter method name in class.
+     * 
+     * @return Empty string if there is no getter method.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_Bw2YQ7J3EeKVn5dRtNGJBQ" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw2_ULJ3EeKVn5dRtNGJBQ" name="getSetterName" visibility="public">
+                <ownedComment xmi:id="_Bw2_UbJ3EeKVn5dRtNGJBQ">
+                  <body>
+     * Returns the setter method name in class.
+     * 
+     * @return Empty string if there is no setter method.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_Bw2_UrJ3EeKVn5dRtNGJBQ" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw3mYLJ3EeKVn5dRtNGJBQ" name="getType" visibility="public">
+                <ownedComment xmi:id="_Bw3mYbJ3EeKVn5dRtNGJBQ">
+                  <body>
+     * Returns the type of the property.
+     * 
+     * @return The class object representing the type of the property.
+     </body>
+                </ownedComment>
+                <ownedParameter xmi:id="_Bw4NcLJ3EeKVn5dRtNGJBQ" type="_Bwz8ALJ3EeKVn5dRtNGJBQ" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw4NcbJ3EeKVn5dRtNGJBQ" name="hashCode" visibility="public">
+                <ownedParameter xmi:id="_Bw40gLJ3EeKVn5dRtNGJBQ" type="_Bw4NcrJ3EeKVn5dRtNGJBQ" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw6CoLJ3EeKVn5dRtNGJBQ" name="equals" visibility="public">
+                <ownedParameter xmi:id="_Bw6CobJ3EeKVn5dRtNGJBQ" type="_BwyG0bJ3EeKVn5dRtNGJBQ" direction="return"/>
+                <ownedParameter xmi:id="_Bw6psLJ3EeKVn5dRtNGJBQ" name="obj" type="_Bw5bkLJ3EeKVn5dRtNGJBQ"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_Bw7QwLJ3EeKVn5dRtNGJBQ" name="toString" visibility="public">
+                <ownedParameter xmi:id="_Bw7QwbJ3EeKVn5dRtNGJBQ" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Association" xmi:id="_2CF8ALJ_EeKz4YDFhnrcsg" name="properties" visibility="protected" memberEnd="_2CF8BLJ_EeKz4YDFhnrcsg _2CF8AbJ_EeKz4YDFhnrcsg" navigableOwnedEnd="_2CF8AbJ_EeKz4YDFhnrcsg">
+              <ownedEnd xmi:id="_2CF8AbJ_EeKz4YDFhnrcsg" name="javaBeanProperty" type="_Bww4sLJ3EeKVn5dRtNGJBQ" aggregation="composite" association="_2CF8ALJ_EeKz4YDFhnrcsg">
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2CF8ArJ_EeKz4YDFhnrcsg"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2CF8A7J_EeKz4YDFhnrcsg" value="*"/>
+              </ownedEnd>
+              <ownedEnd xmi:id="_2CF8BLJ_EeKz4YDFhnrcsg" name="javaBeanModel" type="_croNkLKAEeKz4YDFhnrcsg" association="_2CF8ALJ_EeKz4YDFhnrcsg">
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2CF8BbJ_EeKz4YDFhnrcsg" value="1"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2CF8BrJ_EeKz4YDFhnrcsg" value="1"/>
+              </ownedEnd>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Dependency" xmi:id="_YuN80LKAEeKz4YDFhnrcsg" name="uses" client="_YYi4oLDcEeKexduuYOudZw" supplier="_Bww4sLJ3EeKVn5dRtNGJBQ"/>
+            <packagedElement xmi:type="uml:Class" xmi:id="_croNkLKAEeKz4YDFhnrcsg" clientDependency="_kEf4kLKAEeKz4YDFhnrcsg" name="JavaBeanModelImpl">
+              <ownedComment xmi:id="_cro0oLKAEeKz4YDFhnrcsg">
+                <body>
+ * Default implementation of {@link JavaBeanModel}.
+ * 
+ * @author gayanper
+ * 
+ </body>
+              </ownedComment>
+              <ownedAttribute xmi:id="_crr38LKAEeKz4YDFhnrcsg" name="className" visibility="private" isLeaf="true" type="_YYo_QrDcEeKexduuYOudZw" isUnique="false"/>
+              <ownedAttribute xmi:id="_crtGELKAEeKz4YDFhnrcsg" name="packageName" visibility="private" isLeaf="true" type="_YYo_QrDcEeKexduuYOudZw" isUnique="false"/>
+              <ownedAttribute xmi:id="_cru7QLKAEeKz4YDFhnrcsg" name="beanProperties" visibility="private" isLeaf="true" isUnique="false">
+                <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_cru7QbKAEeKz4YDFhnrcsg"/>
+                <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_crviULKAEeKz4YDFhnrcsg" value="*"/>
+              </ownedAttribute>
+              <ownedOperation xmi:id="_crwJYLKAEeKz4YDFhnrcsg" name="getClassName" visibility="public">
+                <ownedParameter xmi:id="_crxXgLKAEeKz4YDFhnrcsg" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_crx-kLKAEeKz4YDFhnrcsg" name="getPackageName" visibility="public">
+                <ownedParameter xmi:id="_crx-kbKAEeKz4YDFhnrcsg" type="_YYo_QrDcEeKexduuYOudZw" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_crx-krKAEeKz4YDFhnrcsg" name="getProperties" visibility="public">
+                <ownedParameter xmi:id="_cryloLKAEeKz4YDFhnrcsg" direction="return">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_crylobKAEeKz4YDFhnrcsg"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_crzMsLKAEeKz4YDFhnrcsg" value="*"/>
+                </ownedParameter>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Realization" xmi:id="_kEf4kLKAEeKz4YDFhnrcsg" name="Realization1" client="_croNkLKAEeKz4YDFhnrcsg" supplier="_YYi4oLDcEeKexduuYOudZw"/>
+          </packagedElement>
+        </packagedElement>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Model" xmi:id="_BwxfwbJ3EeKVn5dRtNGJBQ" name="datatype">
+    <packagedElement xmi:type="uml:Package" xmi:id="_BwyG0LJ3EeKVn5dRtNGJBQ" name="datatype">
+      <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_BwyG0bJ3EeKVn5dRtNGJBQ" name="Boolean"/>
+      <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_Bw4NcrJ3EeKVn5dRtNGJBQ" name="Integer"/>
+    </packagedElement>
+  </packagedElement>
+  <profileApplication xmi:id="_n9my8LAhEeKX0tMlj0jc7Q">
+    <eAnnotations xmi:id="_n9qdULAhEeKX0tMlj0jc7Q" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/JAVA/1#/"/>
+    </eAnnotations>
+    <appliedProfile href="pathmap://Papyrus_JAVA_PROFILES/java.profile.uml#_6TYLMN0yEd6P1qtlpBOZyg"/>
+  </profileApplication>
+</uml:Model>
