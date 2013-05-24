@@ -1,12 +1,10 @@
 package org.gap.eclipse.jdtcodegenerator;
 
-import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
-import org.eclipse.emf.mwe2.runtime.workflow.WorkflowContextImpl;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xpand2.output.Outlet;
-import org.eclipse.xpand2.output.Output;
-import org.eclipse.xpand2.output.OutputImpl;
-import org.eclipse.xtend.type.impl.java.JavaMetaModel;
+import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneatorFactory;
+import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneratorFactoryImpl;
+import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
+import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactoryImpl;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -19,6 +17,10 @@ public class Activator extends AbstractUIPlugin {
 
     // The shared instance
     private static Activator plugin;
+
+    private JavaBeanModelFactory javaBeanModelFactory;
+
+    private CodeGeneatorFactory codeGeneatorFactory;
 
     /**
      * The constructor
@@ -36,6 +38,8 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        javaBeanModelFactory = new JavaBeanModelFactoryImpl();
+        codeGeneatorFactory = new CodeGeneratorFactoryImpl();
     }
 
     /*
@@ -47,6 +51,8 @@ public class Activator extends AbstractUIPlugin {
      */
     public void stop(BundleContext context) throws Exception {
         plugin = null;
+        javaBeanModelFactory = null;
+        codeGeneatorFactory = null;
         super.stop(context);
     }
 
@@ -59,27 +65,24 @@ public class Activator extends AbstractUIPlugin {
         return plugin;
     }
 
-    public static void main(String[] args) {
-        Outlet outlet = new Outlet();
-        outlet.setPath("ast-gen");
-        
-        Output output = new OutputImpl();
-        output.addOutlet(outlet);
+    /**
+     * Returns the java bean model factory instance to be used.
+     * 
+     * @return An instance of JavaBeanModelFactory which cannot be null if the
+     *         plugin is loaded.
+     */
+    public JavaBeanModelFactory getJavaBeanModelFactory() {
+        return javaBeanModelFactory;
+    }
 
-        JavaMetaModel metaModel = new JavaMetaModel();
-        
-
-        org.eclipse.xpand2.Generator generator = new org.eclipse.xpand2.Generator();
-        generator.addMetaModel(metaModel);
-        
-        IWorkflowContext contextImpl = new WorkflowContextImpl();
-        contextImpl.put("model", new BuilderModel());
-        
-        generator.setOutput(output);
-        generator.setExpand("org::gap::eclipse::jdtcodegenerator::tbuilder::model FOR model");
-        
-        generator.invoke(contextImpl);
-        
+    /**
+     * Returns the code generator factory instance to be used.
+     * 
+     * @return An instance of CodeGeneatorFactory which cannot be null if the
+     *         plugin is loaded.
+     */
+    public CodeGeneatorFactory getCodeGeneatorFactory() {
+        return codeGeneatorFactory;
     }
 
 }

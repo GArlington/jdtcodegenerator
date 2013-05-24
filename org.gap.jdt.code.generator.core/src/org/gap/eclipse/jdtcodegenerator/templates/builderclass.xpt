@@ -1,0 +1,12 @@
+«DEFINE model FOR org::gap::eclipse::jdtcodegenerator::model::JavaBeanModel»
+	«FILE this.className + "Builder.java"»
+/**
+ * The builder class for «this.className»
+ */	
+public class «this.className»Builder {
+    private «this.className»Builder () {
+
+    }
+}
+	«ENDFILE»
+«ENDDEFINE»

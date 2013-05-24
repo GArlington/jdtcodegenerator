@@ -8,7 +8,7 @@ import java.util.List;
  * @author gayanper
  * 
  */
-class JavaBeanModelImpl implements JavaBeanModel {
+public class JavaBeanModelImpl implements JavaBeanModel {
 
     private final String className, packageName;
     private final List<JavaBeanProperty> beanProperties;

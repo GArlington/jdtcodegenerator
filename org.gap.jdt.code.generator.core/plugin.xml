@@ -11,7 +11,7 @@
                label="Code Generators">
             <command
                   commandId="org.gap.jdt.code.generator.core.commands.publicfieldbuilder"
-                  label="Sample Menu"
+                  label="Builder with PublicFields"
                   style="push">
             </command>
             <visibleWhen
