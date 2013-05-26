@@ -26,13 +26,15 @@ public class JavaBeanModelFactoryTest {
     }
 
     @Test
-    private void testCreateModelForBuilderClass_StandardBean() throws ModelCreationException, JavaModelException {
+    private void testCreateModelForBuilderClass_SetterMethods() throws ModelCreationException, JavaModelException {
         final JavaBeanModel model = javaBeanModelFactory.createModelForStandardBean(TestData
                 .createSetterMethodDataSet());
         assertThat(model).as("Model").isNotNull();
         assertThat(model.getClassName()).as("Model.ClassName").isNotNull().isEqualTo("SetterMethodDataSet");
         assertThat(model.getPackageName()).as("Model.PackageName").isNotNull()
                 .isEqualTo("org.gap.eclipse.jdtcodegenerator.model.testdata");
+        assertThat(model.getImports()).as("Import List").hasSize(1);
+        assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
 
         assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(3);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");
@@ -60,6 +62,8 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getClassName()).as("Model.ClassName").isNotNull().isEqualTo("PublicFieldDataSet");
         assertThat(model.getPackageName()).as("Model.PackageName").isNotNull()
                 .isEqualTo("org.gap.eclipse.jdtcodegenerator.model.testdata");
+        assertThat(model.getImports()).as("Import List").hasSize(1);
+        assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
 
         assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(3);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");

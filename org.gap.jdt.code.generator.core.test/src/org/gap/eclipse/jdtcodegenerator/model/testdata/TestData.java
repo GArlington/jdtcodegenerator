@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
@@ -19,11 +20,17 @@ public final class TestData {
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
         final IField[] mockFields = new IField[8];
+        final IImportDeclaration[] mockImports = new IImportDeclaration[1];
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
+        when(mockCompilationUnit.getImports()).thenReturn(mockImports);
         when(mockType.getElementName()).thenReturn("PublicFieldDataSet");
         when(mockType.getPackageFragment()).thenReturn(mockPackageFragment);
         when(mockPackageFragment.getElementName()).thenReturn("org.gap.eclipse.jdtcodegenerator.model.testdata");
+
+        // mock the imports.
+        mockImports[0] = mock(IImportDeclaration.class);
+        when(mockImports[0].getElementName()).thenReturn("java.util.Locale");
 
         // mock the fields one by one.
         mockFields[0] = mock(IField.class);
@@ -76,13 +83,19 @@ public final class TestData {
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
         final IMethod[] mockMethods = new IMethod[8];
+        final IImportDeclaration[] mockImports = new IImportDeclaration[1];
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
+        when(mockCompilationUnit.getImports()).thenReturn(mockImports);
         when(mockType.getElementName()).thenReturn("SetterMethodDataSet");
         when(mockType.getPackageFragment()).thenReturn(mockPackageFragment);
         when(mockPackageFragment.getElementName()).thenReturn("org.gap.eclipse.jdtcodegenerator.model.testdata");
 
-        // mock the fields one by one.
+        // mock imports
+        mockImports[0] = mock(IImportDeclaration.class);
+        when(mockImports[0].getElementName()).thenReturn("java.util.Locale");
+
+        // mock the methods one by one.
         mockMethods[0] = mock(IMethod.class);
         when(mockMethods[0].getFlags()).thenReturn(Flags.AccPublic);
         when(mockMethods[0].getElementName()).thenReturn("setName");
