@@ -33,4 +33,11 @@ public interface JavaBeanModel {
      * @return A list of JavaBeanProperty instances.
      */
     List<JavaBeanProperty> getProperties();
+
+    /**
+     * Returns a list java import used in bean definition.
+     * 
+     * @return A list of JavaImport instances.
+     */
+    List<JavaImport> getImports();
 }

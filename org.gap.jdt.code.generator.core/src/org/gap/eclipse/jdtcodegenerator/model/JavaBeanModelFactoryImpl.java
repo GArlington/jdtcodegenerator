@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -33,7 +34,14 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
         try {
             final IType classType = compilationUnit.getAllTypes()[0];
             final IMethod[] allMethods = classType.getMethods();
+            final IImportDeclaration[] imports = compilationUnit.getImports();
             final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allMethods.length);
+            final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.length);
+
+            // Collect imports
+            for (IImportDeclaration importDef : imports) {
+                javaImports.add(new JavaImport(importDef.getElementName()));
+            }
 
             for (IMethod method : allMethods) {
                 if (!Flags.isStatic(method.getFlags()) && Flags.isPublic(method.getFlags())
@@ -51,7 +59,7 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             }
 
             return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties);
+                    beanProperties, javaImports);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {
@@ -73,8 +81,17 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
         try {
             final IType classType = compilationUnit.getAllTypes()[0];
             final IField[] allFields = classType.getFields();
-            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
+            final IImportDeclaration[] imports = compilationUnit.getImports();
 
+            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
+            final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.length);
+
+            // Collect imports
+            for (IImportDeclaration importDef : imports) {
+                javaImports.add(new JavaImport(importDef.getElementName()));
+            }
+
+            // Collect fields
             for (IField field : allFields) {
                 if (!Flags.isFinal(field.getFlags()) && !Flags.isStatic(field.getFlags())
                         && Flags.isPublic(field.getFlags())) {
@@ -84,7 +101,7 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             }
 
             return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties);
+                    beanProperties, javaImports);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {
