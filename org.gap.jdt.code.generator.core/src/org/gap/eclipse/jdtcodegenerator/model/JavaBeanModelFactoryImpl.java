@@ -51,9 +51,16 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
                     if (matcher.matches()) {
                         final StringBuilder nameBuilder = new StringBuilder(matcher.group(1));
                         nameBuilder.replace(0, 1, nameBuilder.substring(0, 1).toLowerCase());
+                        final String paramSignature = method.getParameterTypes()[0];
 
-                        beanProperties.add(new JavaBeanProperty(true, nameBuilder.toString(), Signature.toString(method
-                                .getParameterTypes()[0]), method.getElementName(), ""));
+                        if (isArrayType(paramSignature)) {
+                            beanProperties.add(new JavaBeanProperty(true, nameBuilder.toString(), Signature
+                                    .toString(paramSignature), method.getElementName(), "", true, Signature
+                                    .toString(Signature.getElementType(paramSignature))));
+                        } else {
+                            beanProperties.add(new JavaBeanProperty(true, nameBuilder.toString(), Signature
+                                    .toString(paramSignature), method.getElementName(), ""));
+                        }
                     }
                 }
             }
@@ -95,8 +102,16 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             for (IField field : allFields) {
                 if (!Flags.isFinal(field.getFlags()) && !Flags.isStatic(field.getFlags())
                         && Flags.isPublic(field.getFlags())) {
-                    beanProperties.add(new JavaBeanProperty(true, field.getElementName(), Signature.toString(field
-                            .getTypeSignature()), "", ""));
+
+                    if (isArrayType(field.getTypeSignature())) {
+                        beanProperties.add(new JavaBeanProperty(true, field.getElementName(), Signature.toString(field
+                                .getTypeSignature()), "", "", true, Signature.toString(Signature.getElementType(field
+                                .getTypeSignature()))));
+
+                    } else {
+                        beanProperties.add(new JavaBeanProperty(true, field.getElementName(), Signature.toString(field
+                                .getTypeSignature()), "", ""));
+                    }
                 }
             }
 
@@ -108,4 +123,9 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             throw new ModelCreationException(ex);
         }
     }
+
+    private boolean isArrayType(String signature) {
+        return Signature.getTypeSignatureKind(signature) == Signature.ARRAY_TYPE_SIGNATURE;
+    }
+
 }

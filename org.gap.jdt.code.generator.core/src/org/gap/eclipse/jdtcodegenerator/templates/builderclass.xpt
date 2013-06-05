@@ -1,12 +1,58 @@
 «DEFINE model FOR org::gap::eclipse::jdtcodegenerator::model::JavaBeanModel»
-	«FILE this.className + "Builder.java"»
+«FILE this.className + "Builder.java"-»
+«IF packageName.length != 0-»
+package «packageName»
+«ENDIF-»
+«FOREACH imports AS e»
+import «e.importDefinition»;
+«ENDFOREACH»
 /**
  * The builder class for «this.className»
  */	
-public class «this.className»Builder {
+public final class «this.className»Builder {
+    «PROTECT CSTART '/*' CEND '*/' ID "Defaults"»
+    // Here you can define any default value constants.
+    «ENDPROTECT»
+    «FOREACH this.properties AS prop»
+    private «prop.type» «prop.name»;
+    «ENDFOREACH»
     private «this.className»Builder () {
-
+        «PROTECT CSTART '/*' CEND '*/' ID "Init"»
+        // Here you can init with default values or add custom init logic.
+        «ENDPROTECT»
     }
+    /**
+     * Creates a new instance of the builder with default values.
+     *
+     * @return A new instance.
+     */
+    public static «this.className»Builder newInstance() {
+        return new «this.className»Builder();
+    }
+
+    /**
+     * Builds and return a new «this.className» with the current configuration.
+     *
+     * @return A new instance of «this.className».
+     */
+    public «this.className» build() {
+        final «this.className» data = new «this.className»(); 
+    «FOREACH this.properties AS prop-»
+        data.«prop.name» = this.«prop.name»;        
+    «ENDFOREACH-»
+        return data;    
+    }
+    «FOREACH this.properties AS prop»
+    /**
+     * Update the «prop.name» in the builder configuration.
+     *
+     * @param «prop.name» The new value
+     * @return The current builder instance.
+     */
+    public void set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
+        this.«prop.name» = value;    
+    }
+    «ENDFOREACH»
 }
-	«ENDFILE»
+«ENDFILE-»
 «ENDDEFINE»
