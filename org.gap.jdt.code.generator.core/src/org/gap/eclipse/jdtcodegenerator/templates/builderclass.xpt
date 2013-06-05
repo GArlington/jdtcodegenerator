@@ -49,8 +49,9 @@ public final class «this.className»Builder {
      * @param «prop.name» The new value
      * @return The current builder instance.
      */
-    public void set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
-        this.«prop.name» = value;    
+    public «this.className»Builder set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
+        this.«prop.name» = value;
+        return this;    
     }
     «ENDFOREACH»
 }
