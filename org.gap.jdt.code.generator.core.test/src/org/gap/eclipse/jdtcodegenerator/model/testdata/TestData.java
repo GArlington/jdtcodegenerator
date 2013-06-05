@@ -19,7 +19,7 @@ public final class TestData {
         final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
-        final IField[] mockFields = new IField[8];
+        final IField[] mockFields = new IField[9];
         final IImportDeclaration[] mockImports = new IImportDeclaration[1];
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
@@ -73,6 +73,12 @@ public final class TestData {
         when(mockFields[7].getElementName()).thenReturn("protectedAge");
         when(mockFields[7].getTypeSignature()).thenReturn(Signature.createTypeSignature("int", true));
 
+        mockFields[8] = mock(IField.class);
+        when(mockFields[8].getFlags()).thenReturn(Flags.AccPublic);
+        when(mockFields[8].getElementName()).thenReturn("addresses");
+        when(mockFields[8].getTypeSignature()).thenReturn(
+                Signature.createArraySignature(Signature.createTypeSignature("java.lang.String", true), 1));
+
         when(mockType.getFields()).thenReturn(mockFields);
 
         return mockCompilationUnit;
@@ -82,7 +88,7 @@ public final class TestData {
         final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
-        final IMethod[] mockMethods = new IMethod[8];
+        final IMethod[] mockMethods = new IMethod[9];
         final IImportDeclaration[] mockImports = new IImportDeclaration[1];
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
@@ -144,6 +150,13 @@ public final class TestData {
         when(mockMethods[7].getFlags()).thenReturn(Flags.AccPublic);
         when(mockMethods[7].getElementName()).thenReturn("setNone");
         when(mockMethods[7].getParameterTypes()).thenReturn(new String[0]);
+
+        mockMethods[8] = mock(IMethod.class);
+        when(mockMethods[8].getFlags()).thenReturn(Flags.AccPublic);
+        when(mockMethods[8].getElementName()).thenReturn("setAddresses");
+        when(mockMethods[8].getParameterTypes()).thenReturn(
+                new String[] { Signature.createArraySignature(Signature.createTypeSignature("java.lang.String", true),
+                        1) });
 
         when(mockType.getMethods()).thenReturn(mockMethods);
 

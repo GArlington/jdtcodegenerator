@@ -36,7 +36,7 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getImports()).as("Import List").hasSize(1);
         assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
 
-        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(3);
+        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(4);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");
         assertThat(model.getProperties().get(0).getType()).as("Property 0 Type").isEqualTo(String.class.getName());
         assertThat(model.getProperties().get(0).getGetterName()).as("Property 0 Getter").isEmpty();
@@ -48,9 +48,19 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getProperties().get(1).getSetterName()).as("Property 1 Setter").isEqualTo("setLocale");
 
         assertThat(model.getProperties().get(2).getName()).as("Property 2 Name").isEqualTo("age");
-        assertThat(model.getProperties().get(2).getType()).as("Property 3 Type").isEqualTo(Integer.TYPE.getName());
+        assertThat(model.getProperties().get(2).getType()).as("Property 2 Type").isEqualTo(Integer.TYPE.getName());
         assertThat(model.getProperties().get(2).getGetterName()).as("Property 2 Getter").isEmpty();
         assertThat(model.getProperties().get(2).getSetterName()).as("Property 2 Setter").isEqualTo("setAge");
+        assertThat(model.getProperties().get(2).isArrayType()).as("Property 2 ArrayType").isFalse();
+
+        assertThat(model.getProperties().get(3).getName()).as("Property 3 Name").isEqualTo("addresses");
+        assertThat(model.getProperties().get(3).getType()).as("Property 3 Type").isEqualTo(
+                String.class.getName().concat("[]"));
+        assertThat(model.getProperties().get(3).getGetterName()).as("Property 3 Getter").isEmpty();
+        assertThat(model.getProperties().get(3).getSetterName()).as("Property 3 Setter").isEqualTo("setAddresses");
+        assertThat(model.getProperties().get(3).isArrayType()).as("Property 3 ArrayType").isTrue();
+        assertThat(model.getProperties().get(3).getComponentType()).as("Property 3 ComponentType").isEqualTo(
+                String.class.getName());
 
     }
 
@@ -65,7 +75,7 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getImports()).as("Import List").hasSize(1);
         assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
 
-        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(3);
+        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(4);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");
         assertThat(model.getProperties().get(0).getType()).as("Property 0 Type").isEqualTo(String.class.getName());
         assertThat(model.getProperties().get(0).getGetterName()).as("Property 0 Getter").isEmpty();
@@ -80,5 +90,16 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getProperties().get(2).getType()).as("Property 3 Type").isEqualTo(Integer.TYPE.getName());
         assertThat(model.getProperties().get(2).getGetterName()).as("Property 2 Getter").isEmpty();
         assertThat(model.getProperties().get(2).getSetterName()).as("Property 2 Setter").isEmpty();
+        assertThat(model.getProperties().get(2).isArrayType()).as("Property 2 ArrayType").isFalse();
+
+        assertThat(model.getProperties().get(3).getName()).as("Property 3 Name").isEqualTo("addresses");
+        assertThat(model.getProperties().get(3).getType()).as("Property 3 Type").isEqualTo(
+                String.class.getName().concat("[]"));
+        assertThat(model.getProperties().get(3).getGetterName()).as("Property 3 Getter").isEmpty();
+        assertThat(model.getProperties().get(3).getSetterName()).as("Property 3 Setter").isEmpty();
+        assertThat(model.getProperties().get(3).isArrayType()).as("Property 3 ArrayType").isTrue();
+        assertThat(model.getProperties().get(3).getComponentType()).as("Property 3 ComponentType").isEqualTo(
+                String.class.getName());
+
     }
 }
