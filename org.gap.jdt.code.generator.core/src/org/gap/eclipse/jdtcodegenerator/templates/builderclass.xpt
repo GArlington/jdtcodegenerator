@@ -1,7 +1,7 @@
 «DEFINE model FOR org::gap::eclipse::jdtcodegenerator::model::JavaBeanModel»
 «FILE this.className + "Builder.java"-»
 «IF packageName.length != 0-»
-package «packageName»
+package «packageName»;
 «ENDIF-»
 «FOREACH imports AS e»
 import «e.importDefinition»;
