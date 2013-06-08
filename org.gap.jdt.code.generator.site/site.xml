@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.gap.jdt.code.generator.feature_1.0.0.201306081858.jar" id="org.gap.jdt.code.generator.feature" version="1.0.0.201306081858"/>
+</site>
