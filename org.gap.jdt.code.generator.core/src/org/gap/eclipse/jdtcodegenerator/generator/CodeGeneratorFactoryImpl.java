@@ -9,7 +9,7 @@ package org.gap.eclipse.jdtcodegenerator.generator;
 public class CodeGeneratorFactoryImpl implements CodeGeneatorFactory {
 
     @Override
-    public CodeGenerator<Void> createBuilderClassGenerator(String templateFQN, String outputPath) {
-        return new BuilderClassCodeGenerator(templateFQN, outputPath);
+    public CodeGenerator<Void> createBuilderClassGenerator(String templateFQN) {
+        return new BuilderClassCodeGenerator(templateFQN);
     }
 }

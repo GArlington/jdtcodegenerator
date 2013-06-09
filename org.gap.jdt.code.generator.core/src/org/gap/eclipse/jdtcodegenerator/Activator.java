@@ -3,6 +3,8 @@ package org.gap.eclipse.jdtcodegenerator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneatorFactory;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneratorFactoryImpl;
+import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModelFactory;
+import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModelFactoryImpl;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactoryImpl;
 import org.osgi.framework.BundleContext;
@@ -22,6 +24,8 @@ public class Activator extends AbstractUIPlugin {
 
     private CodeGeneatorFactory codeGeneatorFactory;
 
+    private CodeGeneratorModelFactory codeGeneratorModelFactory;
+
     /**
      * The constructor
      */
@@ -40,6 +44,7 @@ public class Activator extends AbstractUIPlugin {
         plugin = this;
         javaBeanModelFactory = new JavaBeanModelFactoryImpl();
         codeGeneatorFactory = new CodeGeneratorFactoryImpl();
+        codeGeneratorModelFactory = new CodeGeneratorModelFactoryImpl();
     }
 
     /*
@@ -53,6 +58,7 @@ public class Activator extends AbstractUIPlugin {
         plugin = null;
         javaBeanModelFactory = null;
         codeGeneatorFactory = null;
+        codeGeneratorModelFactory = null;
         super.stop(context);
     }
 
@@ -85,4 +91,13 @@ public class Activator extends AbstractUIPlugin {
         return codeGeneatorFactory;
     }
 
+    /**
+     * Returns the code generator model factory instance to be used.
+     * 
+     * @return An instance of CodeGeneratorModelFactory which cannot be null if
+     *         the plugin is loaded.
+     */
+    public CodeGeneratorModelFactory getCodeGeneratorModelFactory() {
+        return codeGeneratorModelFactory;
+    }
 }

@@ -1,23 +1,26 @@
-«DEFINE model FOR org::gap::eclipse::jdtcodegenerator::model::JavaBeanModel»
-«FILE this.className + "Builder.java"-»
-«IF packageName.length != 0-»
-package «packageName»;
+«DEFINE model FOR org::gap::eclipse::jdtcodegenerator::model::CodeGeneratorModel»
+«FILE beanModel.className + "Builder.java"-»
+«IF targetPackage.length != 0-»
+package «targetPackage»;
 «ENDIF-»
-«FOREACH imports AS e»
+«FOREACH beanModel.imports AS e»
 import «e.importDefinition»;
-«ENDFOREACH»
+«ENDFOREACH-»
+«IF beanModel.packageName != targetPackage»
+import «beanModel.packageName».«beanModel.className»;
+«ENDIF»
 /**
- * The builder class for «this.className»
+ * The builder class for «beanModel.className»
  */	
-public final class «this.className»Builder {
-    «PROTECT CSTART '/*' CEND '*/' ID "Defaults"»
+public final class «beanModel.className»Builder {
+    «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Defaults"»
     // Here you can define any default value constants.
     «ENDPROTECT»
-    «FOREACH this.properties AS prop»
+    «FOREACH beanModel.properties AS prop»
     private «prop.type» «prop.name»;
     «ENDFOREACH»
-    private «this.className»Builder () {
-        «PROTECT CSTART '/*' CEND '*/' ID "Init"»
+    private «beanModel.className»Builder () {
+        «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Init"»
         // Here you can init with default values or add custom init logic.
         «ENDPROTECT»
     }
@@ -26,30 +29,30 @@ public final class «this.className»Builder {
      *
      * @return A new instance.
      */
-    public static «this.className»Builder newInstance() {
-        return new «this.className»Builder();
+    public static «beanModel.className»Builder newInstance() {
+        return new «beanModel.className»Builder();
     }
 
     /**
-     * Builds and return a new «this.className» with the current configuration.
+     * Builds and return a new «beanModel.className» with the current configuration.
      *
-     * @return A new instance of «this.className».
+     * @return A new instance of «beanModel.className».
      */
-    public «this.className» build() {
-        final «this.className» data = new «this.className»(); 
-    «FOREACH this.properties AS prop-»
+    public «beanModel.className» build() {
+        final «beanModel.className» data = new «beanModel.className»(); 
+    «FOREACH beanModel.properties AS prop-»
         data.«prop.name» = this.«prop.name»;        
     «ENDFOREACH-»
         return data;    
     }
-    «FOREACH this.properties AS prop»
+    «FOREACH beanModel.properties AS prop»
     /**
      * Update the «prop.name» in the builder configuration.
      *
      * @param «prop.name» The new value
      * @return The current builder instance.
      */
-    public «this.className»Builder set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
+    public «beanModel.className»Builder set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
         this.«prop.name» = value;
         return this;    
     }

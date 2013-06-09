@@ -16,6 +16,8 @@ import org.gap.eclipse.jdtcodegenerator.Activator;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneatorFactory;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGenerationException;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGenerator;
+import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModel;
+import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModel;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.ModelCreationException;
@@ -31,10 +33,12 @@ import org.gap.eclipse.jdtcodegenerator.ui.PackageSelectionDialog;
 public class GenerateBuilderPublicFields extends AbstractHandler {
     private final JavaBeanModelFactory modelFactory;
     private final CodeGeneatorFactory geneatorFactory;
+    private final CodeGeneratorModelFactory codeGeneratorModelFactory;
 
     public GenerateBuilderPublicFields() {
         modelFactory = Activator.getDefault().getJavaBeanModelFactory();
         geneatorFactory = Activator.getDefault().getCodeGeneatorFactory();
+        codeGeneratorModelFactory = Activator.getDefault().getCodeGeneratorModelFactory();
     }
 
     @Override
@@ -58,12 +62,12 @@ public class GenerateBuilderPublicFields extends AbstractHandler {
                 final IResource selectedPackage = packageFragment.getUnderlyingResource();
 
                 // create a model and invoke generator.
-                final JavaBeanModel model = modelFactory.createModelForPublicFieldProperties(compilationUnit,
-                        packageFragment);
-                final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null, selectedPackage
-                        .getRawLocation().toString());
+                final JavaBeanModel beanModel = modelFactory.createModelForPublicFieldProperties(compilationUnit);
+                final CodeGeneratorModel codeGeneratorModel = codeGeneratorModelFactory
+                        .createBuilderClassGeneratorModel(beanModel, packageFragment);
+                final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null);
 
-                generator.generate(model);
+                generator.generate(codeGeneratorModel);
 
                 // refresh the package folder.
                 selectedPackage.refreshLocal(IContainer.DEPTH_ONE, null);

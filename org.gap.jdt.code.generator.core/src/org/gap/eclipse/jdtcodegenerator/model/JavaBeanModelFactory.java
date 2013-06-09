@@ -1,7 +1,6 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IPackageFragment;
 
 /**
  * Factory API which defines factory methods to create {@link JavaBeanModel}
@@ -18,15 +17,11 @@ public interface JavaBeanModelFactory {
      * populate the model using setter methods with a single parameter.
      * 
      * @param compilationUnit The java source file which needs to be analyzed.
-     * @param destPackage The destination package where the builder class will
-     *        be placed. Pass null if the builder class needs to be created in
-     *        the same package as the given <code>compilationUnit</code>.
      * @return A populated model.
      * @throws ModelCreationException If an error occurred while creating the
      *         model.
      */
-    JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit, IPackageFragment destPackage)
-            throws ModelCreationException;
+    JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit) throws ModelCreationException;
 
     /**
      * Creates a {@link JavaBeanModel} for generating a builder class. This will
@@ -37,14 +32,10 @@ public interface JavaBeanModelFactory {
      * source file contains multiple class definitions.
      * 
      * @param compilationUnit The java source file which needs to be analyzed.
-     * @param destPackage The destination package where the builder class will
-     *        be placed. Pass null if the builder class needs to be created in
-     *        the same package as the given <code>compilationUnit</code>.
      * @return A populated model.
      * @throws ModelCreationException If an error occurred while creating the
      *         model.
      */
-    JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit, IPackageFragment destPackage)
-            throws ModelCreationException;
+    JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit) throws ModelCreationException;
 
 }
