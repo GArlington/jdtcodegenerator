@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -30,7 +31,8 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
      * createModelForStandardBean(org.eclipse.jdt.core.ICompilationUnit)
      */
     @Override
-    public JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit) throws ModelCreationException {
+    public JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit, IPackageFragment destPackage)
+            throws ModelCreationException {
         try {
             final IType classType = compilationUnit.getAllTypes()[0];
             final IMethod[] allMethods = classType.getMethods();
@@ -65,8 +67,9 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
                 }
             }
 
-            return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties, javaImports);
+            final String packageName = (destPackage != null) ? destPackage.getElementName() : classType
+                    .getPackageFragment().getElementName();
+            return new JavaBeanModelImpl(classType.getElementName(), packageName, beanProperties, javaImports);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {
@@ -82,8 +85,8 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
      * (org.eclipse.jdt.core.ICompilationUnit)
      */
     @Override
-    public JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit)
-            throws ModelCreationException {
+    public JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit,
+            IPackageFragment destPackage) throws ModelCreationException {
 
         try {
             final IType classType = compilationUnit.getAllTypes()[0];
@@ -115,8 +118,9 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
                 }
             }
 
-            return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties, javaImports);
+            final String packageName = (destPackage != null) ? destPackage.getElementName() : classType
+                    .getPackageFragment().getElementName();
+            return new JavaBeanModelImpl(classType.getElementName(), packageName, beanProperties, javaImports);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {

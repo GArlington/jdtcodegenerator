@@ -4,8 +4,10 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionService;
@@ -17,7 +19,15 @@ import org.gap.eclipse.jdtcodegenerator.generator.CodeGenerator;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModel;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.ModelCreationException;
+import org.gap.eclipse.jdtcodegenerator.ui.PackageSelectionDialog;
 
+/**
+ * An IHandler implementation which triggers the creation of public field
+ * builder class for the selection class.
+ * 
+ * @author gayanper
+ * 
+ */
 public class GenerateBuilderPublicFields extends AbstractHandler {
     private final JavaBeanModelFactory modelFactory;
     private final CodeGeneatorFactory geneatorFactory;
@@ -35,17 +45,29 @@ public class GenerateBuilderPublicFields extends AbstractHandler {
 
         try {
             final ICompilationUnit compilationUnit = (ICompilationUnit) selection.getFirstElement();
-            final IContainer resourceContainer = compilationUnit.getUnderlyingResource().getParent();
-            final String outputPath = resourceContainer.getRawLocation().toString();
 
-            // create a model and invoke generator.
-            final JavaBeanModel model = modelFactory.createModelForPublicFieldProperties(compilationUnit);
-            final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null, outputPath);
+            // Ask the user for builder destination
+            final PackageSelectionDialog selectionDialog = new PackageSelectionDialog(PlatformUI.getWorkbench()
+                    .getActiveWorkbenchWindow().getShell(), compilationUnit.getJavaProject());
 
-            generator.generate(model);
+            selectionDialog.setTitle("Create builder class in");
+            selectionDialog.open();
 
-            // refresh the package folder.
-            resourceContainer.refreshLocal(IContainer.DEPTH_ONE, null);
+            final IPackageFragment packageFragment = selectionDialog.getSelectedPackage();
+            if (packageFragment != null) {
+                final IResource selectedPackage = packageFragment.getUnderlyingResource();
+
+                // create a model and invoke generator.
+                final JavaBeanModel model = modelFactory.createModelForPublicFieldProperties(compilationUnit,
+                        packageFragment);
+                final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null, selectedPackage
+                        .getRawLocation().toString());
+
+                generator.generate(model);
+
+                // refresh the package folder.
+                selectedPackage.refreshLocal(IContainer.DEPTH_ONE, null);
+            }
 
         } catch (ModelCreationException ex) {
             throw new ExecutionException(ex.getMessage(), ex);
@@ -59,4 +81,5 @@ public class GenerateBuilderPublicFields extends AbstractHandler {
 
         return null;
     }
+
 }
