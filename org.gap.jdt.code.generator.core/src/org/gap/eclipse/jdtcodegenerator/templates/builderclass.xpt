@@ -41,7 +41,11 @@ public final class «beanModel.className»Builder {
     public «beanModel.className» build() {
         final «beanModel.className» data = new «beanModel.className»(); 
     «FOREACH beanModel.properties AS prop-»
-        data.«prop.name» = this.«prop.name»;        
+    «IF prop.setterName.length > 0-»
+        data.«prop.setterName»(this.«prop.name»);
+    «ELSE-»
+        data.«prop.name» = this.«prop.name»;
+    «ENDIF-»
     «ENDFOREACH-»
         return data;    
     }

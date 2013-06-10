@@ -11,7 +11,12 @@
                label="Code Generators">
             <command
                   commandId="org.gap.jdt.code.generator.core.commands.publicfieldbuilder"
-                  label="Builder with PublicFields"
+                  label="Generate Builder (Public Fields)"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.gap.jdt.code.generator.core.commands.publicsetterbuilder"
+                  label="Generate Builder (Public Setters)"
                   style="push">
             </command>
             <visibleWhen
@@ -41,6 +46,11 @@
             defaultHandler="org.gap.eclipse.jdtcodegenerator.commands.GenerateBuilderPublicFields"
             id="org.gap.jdt.code.generator.core.commands.publicfieldbuilder"
             name="Generate Builder (Public Fields)">
+      </command>
+      <command
+            defaultHandler="org.gap.eclipse.jdtcodegenerator.commands.GenerateBuilderPublicSetters"
+            id="org.gap.jdt.code.generator.core.commands.publicsetterbuilder"
+            name="Generate Builder (Public Setters)">
       </command>
    </extension>
 
