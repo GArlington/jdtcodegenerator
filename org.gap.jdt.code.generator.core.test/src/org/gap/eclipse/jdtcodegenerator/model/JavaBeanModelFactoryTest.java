@@ -5,7 +5,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.util.Locale;
 
 import org.eclipse.jdt.core.JavaModelException;
-import org.gap.eclipse.jdtcodegenerator.model.testdata.TestData;
+import org.gap.eclipse.jdtcodegenerator.model.testdata.JavaBeanModelFactoryTestData;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ public class JavaBeanModelFactoryTest {
 
     @Test
     private void testCreateModelForBuilderClass_SetterMethods() throws ModelCreationException, JavaModelException {
-        final JavaBeanModel model = javaBeanModelFactory.createModelForStandardBean(TestData
+        final JavaBeanModel model = javaBeanModelFactory.createModelForStandardBean(JavaBeanModelFactoryTestData
                 .createSetterMethodDataSet());
         assertThat(model).as("Model").isNotNull();
         assertThat(model.getClassName()).as("Model.ClassName").isNotNull().isEqualTo("SetterMethodDataSet");
@@ -66,7 +66,7 @@ public class JavaBeanModelFactoryTest {
 
     @Test
     private void testCreateModelForBuilderClass_PublicField() throws ModelCreationException, JavaModelException {
-        final JavaBeanModel model = javaBeanModelFactory.createModelForPublicFieldProperties(TestData
+        final JavaBeanModel model = javaBeanModelFactory.createModelForPublicFieldProperties(JavaBeanModelFactoryTestData
                 .createPublicFieldDataSet());
         assertThat(model).as("Model").isNotNull();
         assertThat(model.getClassName()).as("Model.ClassName").isNotNull().isEqualTo("PublicFieldDataSet");

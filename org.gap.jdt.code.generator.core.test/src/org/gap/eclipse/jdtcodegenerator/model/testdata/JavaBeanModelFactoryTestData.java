@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 
-public final class TestData {
+public final class JavaBeanModelFactoryTestData {
 
     public static ICompilationUnit createPublicFieldDataSet() throws JavaModelException {
         final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
