@@ -44,7 +44,7 @@ public class Activator extends AbstractUIPlugin {
         plugin = this;
         javaBeanModelFactory = new JavaBeanModelFactoryImpl();
         codeGeneatorFactory = new CodeGeneratorFactoryImpl();
-        codeGeneratorModelFactory = new CodeGeneratorModelFactoryImpl();
+        codeGeneratorModelFactory = new CodeGeneratorModelFactoryImpl(javaBeanModelFactory);
     }
 
     /*

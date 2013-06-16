@@ -1,5 +1,7 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 
 /**
@@ -38,4 +40,16 @@ public interface JavaBeanModelFactory {
      */
     JavaBeanModel createModelForPublicFieldProperties(ICompilationUnit compilationUnit) throws ModelCreationException;
 
+    /**
+     * Creates a new JavaBeanModel with the given template instance and update
+     * the given imports into the new model.
+     * 
+     * @param template The template instance which cannot be null.
+     * @param imports An list of imports to update in the new model which cannot
+     *        be null.
+     * @return The new model instance.
+     * @throws ModelCreationException If the model creation failed.
+     */
+    JavaBeanModel createModelWithTemplate(JavaBeanModel template, List<JavaImport> imports)
+            throws ModelCreationException;
 }

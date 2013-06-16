@@ -1,5 +1,6 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,12 +44,12 @@ public class JavaBeanModelImpl implements JavaBeanModel {
 
     @Override
     public List<JavaBeanProperty> getProperties() {
-        return beanProperties;
+        return Collections.unmodifiableList(beanProperties);
     }
 
     @Override
     public List<JavaImport> getImports() {
-        return javaImports;
+        return Collections.unmodifiableList(javaImports);
     }
 
 }

@@ -1,6 +1,7 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -122,6 +123,13 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
         } catch (IllegalArgumentException ex) {
             throw new ModelCreationException(ex);
         }
+    }
+
+    @Override
+    public JavaBeanModel createModelWithTemplate(JavaBeanModel template, List<JavaImport> imports)
+            throws ModelCreationException {
+        return new JavaBeanModelImpl(template.getClassName(), template.getPackageName(),
+                new ArrayList<JavaBeanProperty>(template.getProperties()), imports);
     }
 
     private boolean isArrayType(String signature) {
