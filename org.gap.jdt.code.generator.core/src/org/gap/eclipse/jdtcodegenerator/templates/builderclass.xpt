@@ -8,20 +8,21 @@ import «e.importDefinition»;
 «ENDFOREACH-»
 «IF beanModel.packageName != targetPackage»
 import «beanModel.packageName».«beanModel.className»;
-«ENDIF»
+«ENDIF-»
+«PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Imports"»
+«ENDPROTECT»
+
 /**
  * The builder class for «beanModel.className»
  */	
 public final class «beanModel.className»Builder {
     «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Defaults"»
-    // Here you can define any default value constants.
     «ENDPROTECT»
     «FOREACH beanModel.properties AS prop»
     private «prop.type» «prop.name»;
     «ENDFOREACH»
     private «beanModel.className»Builder () {
         «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Init"»
-        // Here you can init with default values or add custom init logic.
         «ENDPROTECT»
     }
     /**
@@ -64,6 +65,10 @@ public final class «beanModel.className»Builder {
         return this;    
     }
     «ENDFOREACH»
+    
+    «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Methods"»
+    «ENDPROTECT»
+    
 }
 «ENDFILE-»
 «ENDDEFINE»
