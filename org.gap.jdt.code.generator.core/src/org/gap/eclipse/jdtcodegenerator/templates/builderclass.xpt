@@ -53,7 +53,7 @@ public final class «beanModel.className»Builder {
     /**
      * Update the «prop.name» in the builder configuration.
      *
-     * @param «prop.name» The new value
+     * @param value The new value
      * @return The current builder instance.
      */
     public «beanModel.className»Builder set«prop.name.toFirstUpper()»(«IF prop.arrayType-»«prop.componentType»...«ELSE-»«prop.type»«ENDIF-» value) {
