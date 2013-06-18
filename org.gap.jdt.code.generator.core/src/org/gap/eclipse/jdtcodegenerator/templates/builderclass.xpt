@@ -39,7 +39,10 @@ public final class «beanModel.className»Builder {
      * @return A new instance of «beanModel.className».
      */
     public «beanModel.className» build() {
+        «PROTECT CSTART '/*' CEND '*/' ID beanModel.className + "Builder.Construct"»
         final «beanModel.className» data = new «beanModel.className»(); 
+        «ENDPROTECT»
+        
     «FOREACH beanModel.properties AS prop-»
     «IF prop.setterName.length > 0-»
         data.«prop.setterName»(this.«prop.name»);
