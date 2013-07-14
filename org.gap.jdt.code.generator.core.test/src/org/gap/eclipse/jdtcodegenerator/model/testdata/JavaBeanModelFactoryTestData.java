@@ -1,8 +1,10 @@
 package org.gap.eclipse.jdtcodegenerator.model.testdata;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -10,6 +12,7 @@ import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 
@@ -90,11 +93,18 @@ public final class JavaBeanModelFactoryTestData {
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
         final IMethod[] mockMethods = new IMethod[9];
         final IImportDeclaration[] mockImports = new IImportDeclaration[1];
+        final ITypeHierarchy mockSuperITypeHierarchy = mock(ITypeHierarchy.class);
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
         when(mockCompilationUnit.getImports()).thenReturn(mockImports);
         when(mockType.getElementName()).thenReturn("SetterMethodDataSet");
         when(mockType.getPackageFragment()).thenReturn(mockPackageFragment);
+        when(mockType.getCompilationUnit()).thenReturn(mockCompilationUnit);
+
+        when(mockType.newSupertypeHierarchy(any(IProgressMonitor.class))).thenReturn(mockSuperITypeHierarchy);
+        final IType[] mockSuperTypes = createSuperTypes();
+        when(mockSuperITypeHierarchy.getAllSupertypes(mockType)).thenReturn(mockSuperTypes);
+
         when(mockPackageFragment.getElementName()).thenReturn("org.gap.eclipse.jdtcodegenerator.model.testdata");
 
         // mock imports
@@ -161,5 +171,32 @@ public final class JavaBeanModelFactoryTestData {
         when(mockType.getMethods()).thenReturn(mockMethods);
 
         return mockCompilationUnit;
+    }
+
+    private static IType[] createSuperTypes() throws JavaModelException {
+        final IType mockType = mock(IType.class);
+        final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
+        final IImportDeclaration[] mockImports = new IImportDeclaration[1];
+        final IMethod[] mockMethods = new IMethod[1];
+
+        mockImports[0] = mock(IImportDeclaration.class);
+        when(mockImports[0].getElementName()).thenReturn("java.util.Map");
+
+        mockMethods[0] = mock(IMethod.class);
+        when(mockMethods[0].getFlags()).thenReturn(Flags.AccPublic);
+        when(mockMethods[0].getElementName()).thenReturn("setMap");
+        when(mockMethods[0].getParameterTypes())
+                .thenReturn(new String[] { Signature.createTypeSignature("Map", true) });
+
+        when(mockType.getMethods()).thenReturn(mockMethods);
+        when(mockType.getCompilationUnit()).thenReturn(mockCompilationUnit);
+        when(mockCompilationUnit.getImports()).thenReturn(mockImports);
+
+        final IType mockBinarySuper = mock(IType.class);
+        when(mockBinarySuper.getCompilationUnit()).thenReturn(null);
+        when(mockBinarySuper.getMethods()).thenReturn(new IMethod[0]);
+        when(mockBinarySuper.getFields()).thenReturn(new IField[0]);
+
+        return new IType[]{ mockType, mockBinarySuper};
     }
 }
