@@ -1,10 +1,12 @@
 package org.gap.eclipse.jdtcodegenerator.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -34,10 +36,10 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
     public JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit) throws ModelCreationException {
         try {
             final IType classType = compilationUnit.getAllTypes()[0];
-            final IMethod[] allMethods = classType.getMethods();
-            final IImportDeclaration[] imports = compilationUnit.getImports();
-            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allMethods.length);
-            final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.length);
+            final List<IMethod> allMethods = getMethodsFromHierarchy(classType);
+            final List<IImportDeclaration> imports = getImportsFromHierarchy(classType);
+            final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allMethods.size());
+            final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.size());
 
             // Collect imports
             for (IImportDeclaration importDef : imports) {
@@ -134,6 +136,38 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
 
     private boolean isArrayType(String signature) {
         return Signature.getTypeSignatureKind(signature) == Signature.ARRAY_TYPE_SIGNATURE;
+    }
+
+    private List<IMethod> getMethodsFromHierarchy(IType type) throws JavaModelException {
+        final IMethod[] methods = type.getMethods();
+        final List<IMethod> methodList = new ArrayList<IMethod>(methods.length);
+        for (final IMethod method : methods) {
+            methodList.add(method);
+        }
+
+        final IType[] superTypes = type.newSupertypeHierarchy(new NullProgressMonitor()).getAllSupertypes(type);
+        for (final IType superType : superTypes) {
+            methodList.addAll(Arrays.asList(superType.getMethods()));
+        }
+
+        return methodList;
+    }
+
+    private List<IImportDeclaration> getImportsFromHierarchy(IType type) throws JavaModelException {
+        final IImportDeclaration[] imports = type.getCompilationUnit().getImports();
+        final List<IImportDeclaration> importList = new ArrayList<IImportDeclaration>(imports.length);
+        for (final IImportDeclaration importDef : imports) {
+            importList.add(importDef);
+        }
+
+        final IType[] superTypes = type.newSupertypeHierarchy(new NullProgressMonitor()).getAllSupertypes(type);
+        for (final IType superType : superTypes) {
+            if (superType.getCompilationUnit() != null) {
+                importList.addAll(Arrays.asList(superType.getCompilationUnit().getImports()));
+            }
+        }
+
+        return importList;
     }
 
 }
