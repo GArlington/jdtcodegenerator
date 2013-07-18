@@ -2,8 +2,11 @@ package org.gap.eclipse.jdtcodegenerator.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
@@ -18,6 +21,8 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
 
     private final JavaBeanModelFactory beanModelFactory;
 
+    private final Set<String> primitiveTypeNames;
+
     /**
      * Creates a new instance of this factory.
      * 
@@ -25,30 +30,57 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
      */
     public CodeGeneratorModelFactoryImpl(JavaBeanModelFactory beanModelFactory) {
         this.beanModelFactory = beanModelFactory;
+        primitiveTypeNames = new HashSet<String>();
+
+        primitiveTypeNames.add(Boolean.TYPE.getName());
+        primitiveTypeNames.add(Byte.TYPE.getName());
+        primitiveTypeNames.add(Short.TYPE.getName());
+        primitiveTypeNames.add(Integer.TYPE.getName());
+        primitiveTypeNames.add(Long.TYPE.getName());
+        primitiveTypeNames.add(Float.TYPE.getName());
+        primitiveTypeNames.add(Double.TYPE.getName());
+        primitiveTypeNames.add(Character.TYPE.getName());
     }
 
     @Override
     public CodeGeneratorModel createBuilderClassGeneratorModel(JavaBeanModel beanModel, IPackageFragment targetPackage)
             throws ModelCreationException {
         try {
-            return new SimpleCodeGeneratorModel(fixImports(beanModel), targetPackage.getElementName(), targetPackage
-                    .getUnderlyingResource().getRawLocation().toString());
+            return new SimpleCodeGeneratorModel(fixImports(beanModel, targetPackage.getElementName()),
+                    targetPackage.getElementName(), targetPackage.getUnderlyingResource().getRawLocation().toString());
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         }
     }
 
-    private JavaBeanModel fixImports(JavaBeanModel model) throws ModelCreationException {
-        final List<JavaBeanProperty> properties = model.getProperties();
+    private JavaBeanModel fixImports(JavaBeanModel model, String targetPkg) throws ModelCreationException {
+        final List<JavaBeanProperty> clonedProperties = new ArrayList<JavaBeanProperty>(model.getProperties());
         final List<JavaImport> imports = model.getImports();
         final Map<String, JavaImport> importsMap = toMap(imports);
         final List<JavaImport> newImportList = new ArrayList<JavaImport>();
 
-        for (JavaBeanProperty javaBeanProperty : properties) {
+        for (Iterator<JavaBeanProperty> iterator = clonedProperties.iterator(); iterator.hasNext();) {
+            final JavaBeanProperty javaBeanProperty = iterator.next();
             final JavaImport removedImport = importsMap.remove(javaBeanProperty.getType());
+
             if (removedImport != null) {
                 newImportList.add(removedImport);
+                iterator.remove();
             }
+        }
+
+        // If the target and source packages are different add all property types excluding java.lang.*
+        if (!model.getPackageName().equals(targetPkg)) {
+            // Iterate over the remaining properties and try to find any required imports.
+            for (JavaBeanProperty javaBeanProperty : clonedProperties) {
+                final String type = (javaBeanProperty.isArrayType()) ? javaBeanProperty.getComponentType()
+                        : javaBeanProperty.getType();
+
+                if (!primitiveTypeNames.contains(type) && !isJavaLang(type)) {
+                    newImportList.add(new JavaImport(model.getPackageName() + "." + type));
+                }
+            }
+
         }
 
         // Handle wild card imports.
@@ -69,5 +101,14 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
                     javaImport);
         }
         return importMap;
+    }
+
+    private boolean isJavaLang(String type) {
+        try {
+            Class.forName("java.lang." + type);
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }
