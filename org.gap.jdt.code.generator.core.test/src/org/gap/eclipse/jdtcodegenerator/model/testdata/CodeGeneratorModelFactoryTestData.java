@@ -79,4 +79,36 @@ public class CodeGeneratorModelFactoryTestData {
 
         return mockIPackageFragment;
     }
+
+    public static JavaBeanModel createModelWithSamePackageImports_SameTargetPackage() {
+        final JavaBeanModel mockBeanModel = mock(JavaBeanModel.class);
+        final List<JavaImport> importList = Arrays.asList(new JavaImport("java.util.Locale"));
+        final List<JavaBeanProperty> propertyList = Arrays.asList(new JavaBeanProperty(false, "locale", "Locale", "",
+                ""), new JavaBeanProperty(false, "samepkgData", "SamePkgData", "", ""), new JavaBeanProperty(false,
+                "name", "String", "", ""), new JavaBeanProperty(false, "age", "int", "", ""), new JavaBeanProperty(
+                false, "otherNames", "String[]", "", "", true, "String"));
+
+        when(mockBeanModel.getImports()).thenReturn(importList);
+        when(mockBeanModel.getProperties()).thenReturn(propertyList);
+        when(mockBeanModel.getClassName()).thenReturn(CLASS_NAME);
+        when(mockBeanModel.getPackageName()).thenReturn(TARGET_PKG);
+
+        return mockBeanModel;
+    }
+
+    public static JavaBeanModel createModelWithSamePackageImports_DiffTargetPackage() {
+        final JavaBeanModel mockBeanModel = mock(JavaBeanModel.class);
+        final List<JavaImport> importList = Arrays.asList(new JavaImport("java.util.Locale"));
+        final List<JavaBeanProperty> propertyList = Arrays.asList(new JavaBeanProperty(false, "locale", "Locale", "",
+                ""), new JavaBeanProperty(false, "samepkgData", "SamePkgData", "", ""), new JavaBeanProperty(false,
+                "name", "String", "", ""), new JavaBeanProperty(false, "age", "int", "", ""), new JavaBeanProperty(
+                false, "otherNames", "String[]", "", "", true, "String"));
+
+        when(mockBeanModel.getImports()).thenReturn(importList);
+        when(mockBeanModel.getProperties()).thenReturn(propertyList);
+        when(mockBeanModel.getClassName()).thenReturn(CLASS_NAME);
+        when(mockBeanModel.getPackageName()).thenReturn(CLASS_PACKAGE);
+
+        return mockBeanModel;
+    }
 }

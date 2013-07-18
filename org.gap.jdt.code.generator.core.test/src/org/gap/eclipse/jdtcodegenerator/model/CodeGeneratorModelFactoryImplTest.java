@@ -99,4 +99,56 @@ public class CodeGeneratorModelFactoryImplTest {
             }
         });
     }
+
+    @Test
+    public void testCreateBuilderClassGeneratorModel_SamePkgImport_SameTarget() throws ModelCreationException,
+            JavaModelException {
+
+        final JavaBeanModel inputModel = CodeGeneratorModelFactoryTestData
+                .createModelWithSamePackageImports_SameTargetPackage();
+        final CodeGeneratorModel result = generatorModelFactory.createBuilderClassGeneratorModel(inputModel,
+                CodeGeneratorModelFactoryTestData.createTargetPackage());
+
+        assertThat(result).as("Result").isNotNull();
+        assertThat(result.getTargetPackage()).as("Target Package").isEqualTo(
+                CodeGeneratorModelFactoryTestData.TARGET_PKG);
+        assertThat(result.getOutputDir()).as("OutDir").isEqualTo(CodeGeneratorModelFactoryTestData.OUT_DIR);
+        assertThat(result.getBeanModel()).as("Bean Model").isNotNull().isNotSameAs(inputModel);
+
+        assertThat(result.getBeanModel().getImports()).hasSize(1).is(new Condition<List<?>>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public boolean matches(List<?> value) {
+                return ((List<JavaImport>) value).get(0).getImportDefinition().equals("java.util.Locale");
+            }
+        });
+    }
+
+    @Test
+    public void testCreateBuilderClassGeneratorModel_SamePkgImport_DiffTarget() throws ModelCreationException,
+            JavaModelException {
+
+        final JavaBeanModel inputModel = CodeGeneratorModelFactoryTestData
+                .createModelWithSamePackageImports_DiffTargetPackage();
+        final CodeGeneratorModel result = generatorModelFactory.createBuilderClassGeneratorModel(inputModel,
+                CodeGeneratorModelFactoryTestData.createTargetPackage());
+
+        assertThat(result).as("Result").isNotNull();
+        assertThat(result.getTargetPackage()).as("Target Package").isEqualTo(
+                CodeGeneratorModelFactoryTestData.TARGET_PKG);
+        assertThat(result.getOutputDir()).as("OutDir").isEqualTo(CodeGeneratorModelFactoryTestData.OUT_DIR);
+        assertThat(result.getBeanModel()).as("Bean Model").isNotNull().isNotSameAs(inputModel);
+
+        assertThat(result.getBeanModel().getImports()).hasSize(2).is(new Condition<List<?>>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public boolean matches(List<?> value) {
+                return ((List<JavaImport>) value).get(0).getImportDefinition().equals("java.util.Locale")
+                        && ((List<JavaImport>) value).get(1).getImportDefinition().equals("sample.pkg.SamePkgData");
+            }
+        });
+    }
+
 }
