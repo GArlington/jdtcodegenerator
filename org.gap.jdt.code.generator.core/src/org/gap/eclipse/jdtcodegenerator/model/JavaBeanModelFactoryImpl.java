@@ -128,10 +128,17 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
     }
 
     @Override
-    public JavaBeanModel createModelWithTemplate(JavaBeanModel template, List<JavaImport> imports)
+    public JavaBeanModel createModelWithImports(JavaBeanModel template, List<JavaImport> imports)
             throws ModelCreationException {
         return new JavaBeanModelImpl(template.getClassName(), template.getPackageName(),
-                new ArrayList<JavaBeanProperty>(template.getProperties()), imports);
+                new ArrayList<JavaBeanProperty>(template.getProperties()), new ArrayList<JavaImport>(imports));
+    }
+
+    @Override
+    public JavaBeanModel createModelWithProperties(JavaBeanModel template, List<JavaBeanProperty> properties)
+            throws ModelCreationException {
+        return new JavaBeanModelImpl(template.getClassName(), template.getPackageName(),
+                new ArrayList<JavaBeanProperty>(properties), new ArrayList<JavaImport>(template.getImports()));
     }
 
     private boolean isArrayType(String signature) {

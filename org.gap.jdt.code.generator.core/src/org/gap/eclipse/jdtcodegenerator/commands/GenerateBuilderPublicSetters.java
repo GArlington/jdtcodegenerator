@@ -1,5 +1,8 @@
 package org.gap.eclipse.jdtcodegenerator.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -20,7 +23,9 @@ import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModel;
 import org.gap.eclipse.jdtcodegenerator.model.CodeGeneratorModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModel;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
+import org.gap.eclipse.jdtcodegenerator.model.JavaBeanProperty;
 import org.gap.eclipse.jdtcodegenerator.model.ModelCreationException;
+import org.gap.eclipse.jdtcodegenerator.ui.GeneratorElementSelectionDialog;
 import org.gap.eclipse.jdtcodegenerator.ui.PackageSelectionDialog;
 
 /**
@@ -62,15 +67,26 @@ public class GenerateBuilderPublicSetters extends AbstractHandler {
                 final IResource selectedPackage = packageFragment.getUnderlyingResource();
 
                 // create a model and invoke generator.
-                final JavaBeanModel beanModel = modelFactory.createModelForStandardBean(compilationUnit);
-                final CodeGeneratorModel codeGeneratorModel = codeGeneratorModelFactory
-                        .createBuilderClassGeneratorModel(beanModel, packageFragment);
-                final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null);
+                JavaBeanModel beanModel = modelFactory.createModelForStandardBean(compilationUnit);
 
-                generator.generate(codeGeneratorModel);
+                // Show the selection UI
+                GeneratorElementSelectionDialog elementSelectionDialog = new GeneratorElementSelectionDialog(PlatformUI
+                        .getWorkbench().getActiveWorkbenchWindow().getShell(), beanModel);
+                elementSelectionDialog.open();
+                List<JavaBeanProperty> result = toList(elementSelectionDialog.getResult());
+                if (!result.isEmpty()) {
+                    beanModel = modelFactory.createModelWithProperties(beanModel, result);
 
-                // refresh the package folder.
-                selectedPackage.refreshLocal(IContainer.DEPTH_ONE, null);
+                    final CodeGeneratorModel codeGeneratorModel = codeGeneratorModelFactory
+                            .createBuilderClassGeneratorModel(beanModel, packageFragment);
+                    final CodeGenerator<Void> generator = geneatorFactory.createBuilderClassGenerator(null);
+
+                    generator.generate(codeGeneratorModel);
+
+                    // refresh the package folder.
+                    selectedPackage.refreshLocal(IContainer.DEPTH_ONE, null);
+                }
+
             }
 
         } catch (ModelCreationException ex) {
@@ -84,6 +100,16 @@ public class GenerateBuilderPublicSetters extends AbstractHandler {
         }
 
         return null;
+    }
+
+    private List<JavaBeanProperty> toList(Object[] objects) {
+        final List<JavaBeanProperty> list = new ArrayList<JavaBeanProperty>();
+        if (objects != null) {
+            for (Object object : objects) {
+                list.add((JavaBeanProperty) object);
+            }
+        }
+        return list;
     }
 
 }

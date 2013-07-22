@@ -90,7 +90,7 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
             }
         }
 
-        return beanModelFactory.createModelWithTemplate(model, newImportList);
+        return beanModelFactory.createModelWithImports(model, newImportList);
     }
 
     private Map<String, JavaImport> toMap(List<JavaImport> imports) {

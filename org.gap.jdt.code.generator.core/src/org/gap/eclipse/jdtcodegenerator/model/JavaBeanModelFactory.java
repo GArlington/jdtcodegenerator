@@ -50,6 +50,20 @@ public interface JavaBeanModelFactory {
      * @return The new model instance.
      * @throws ModelCreationException If the model creation failed.
      */
-    JavaBeanModel createModelWithTemplate(JavaBeanModel template, List<JavaImport> imports)
+    JavaBeanModel createModelWithImports(JavaBeanModel template, List<JavaImport> imports)
             throws ModelCreationException;
+
+    /**
+     * Creates a new JavaBeanModel with the given template instance and update
+     * the given properties into the new model.
+     * 
+     * @param template The template instance which cannot be null.
+     * @param properties An list of properties to update in the new model which
+     *        cannot be null.
+     * @return The new model instance.
+     * @throws ModelCreationException If the model creation failed.
+     */
+    JavaBeanModel createModelWithProperties(JavaBeanModel template, List<JavaBeanProperty> properties)
+            throws ModelCreationException;
+
 }

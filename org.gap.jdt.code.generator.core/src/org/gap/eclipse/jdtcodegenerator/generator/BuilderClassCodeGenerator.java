@@ -1,10 +1,9 @@
 package org.gap.eclipse.jdtcodegenerator.generator;
 
-import java.util.Arrays;
-
 import org.eclipse.emf.mwe2.runtime.workflow.IWorkflowContext;
 import org.eclipse.emf.mwe2.runtime.workflow.WorkflowContextImpl;
 import org.eclipse.xpand2.Generator;
+import org.eclipse.xpand2.output.JavaBeautifier;
 import org.eclipse.xpand2.output.Outlet;
 import org.eclipse.xpand2.output.Output;
 import org.eclipse.xpand2.output.OutputImpl;
@@ -40,6 +39,7 @@ public class BuilderClassCodeGenerator implements CodeGenerator<Void> {
     public Void generate(CodeGeneratorModel model) throws CodeGenerationException {
         final Outlet outlet = new Outlet();
         outlet.setPath(model.getOutputDir());
+        outlet.addPostprocessor(new JavaBeautifier());
 
         final Output output = new OutputImpl();
         output.addOutlet(outlet);
@@ -53,7 +53,6 @@ public class BuilderClassCodeGenerator implements CodeGenerator<Void> {
         updateGeneratorTemplateConfiguration(generator);
 
         generator.setOutput(output);
-        generator.setBeautifier(Arrays.asList("org.eclipse.xpand2.output.JavaBeautifier"));
         generator.setPrSrcPaths(model.getOutputDir());
         generator.invoke(contextImpl);
 
