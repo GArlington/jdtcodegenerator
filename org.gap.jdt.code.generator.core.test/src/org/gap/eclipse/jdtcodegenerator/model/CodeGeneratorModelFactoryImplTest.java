@@ -151,4 +151,35 @@ public class CodeGeneratorModelFactoryImplTest {
         });
     }
 
+    @Test
+    public void testCreateBuilderClassGeneratorModel_WithEnumsInClass() throws ModelCreationException,
+            JavaModelException {
+
+        final JavaBeanModel inputModel = CodeGeneratorModelFactoryTestData.createModelWithEnums();
+        final CodeGeneratorModel result = generatorModelFactory.createBuilderClassGeneratorModel(inputModel,
+                CodeGeneratorModelFactoryTestData.createTargetPackage());
+
+        assertThat(result).as("Result").isNotNull();
+        assertThat(result.getTargetPackage()).as("Target Package").isEqualTo(
+                CodeGeneratorModelFactoryTestData.TARGET_PKG);
+        assertThat(result.getOutputDir()).as("OutDir").isEqualTo(CodeGeneratorModelFactoryTestData.OUT_DIR);
+        assertThat(result.getBeanModel()).as("Bean Model").isNotNull().isNotSameAs(inputModel);
+        assertThat(result.getBeanModel().getProperties().get(1).getType()).as("Enum Property Type 1").isEqualTo("State");
+        assertThat(result.getBeanModel().getProperties().get(2).getType()).as("Enum Property Type 2").isEqualTo("java.lang.Thread.State");
+        assertThat(result.getBeanModel().getImports()).hasSize(2).is(new Condition<List<?>>() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public boolean matches(List<?> value) {
+                return ((List<JavaImport>) value).get(0).getImportDefinition().equals("java.util.Locale")
+                        && ((List<JavaImport>) value)
+                                .get(1)
+                                .getImportDefinition()
+                                .equals(CodeGeneratorModelFactoryTestData.CLASS_PACKAGE.concat(".")
+                                        .concat(CodeGeneratorModelFactoryTestData.CLASS_NAME).concat(".State"));
+            }
+        });
+
+    }
+
 }

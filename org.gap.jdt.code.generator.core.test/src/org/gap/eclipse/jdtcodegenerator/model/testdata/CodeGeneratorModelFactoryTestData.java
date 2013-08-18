@@ -67,6 +67,25 @@ public class CodeGeneratorModelFactoryTestData {
         return mockBeanModel;
     }
 
+    public static JavaBeanModel createModelWithEnums() {
+        final JavaBeanModel mockBeanModel = mock(JavaBeanModel.class);
+        final List<JavaImport> importList = Arrays.asList(new JavaImport("java.util.Locale"));
+        final List<JavaBeanProperty> propertyList = Arrays.asList(new JavaBeanProperty(false, "locale", "Locale", "",
+                ""), new JavaBeanProperty(false, "state", "State", "",
+                        ""), new JavaBeanProperty(false, "workerState", "java.lang.Thread.State", "",
+                                ""));
+        final List<String> enumTypeNames = Arrays.asList("State");
+        
+        when(mockBeanModel.getImports()).thenReturn(importList);
+        when(mockBeanModel.getProperties()).thenReturn(propertyList);
+        when(mockBeanModel.getClassName()).thenReturn(CLASS_NAME);
+        when(mockBeanModel.getPackageName()).thenReturn(CLASS_PACKAGE);
+        when(mockBeanModel.getInnerTypeNames()).thenReturn(enumTypeNames);
+
+        return mockBeanModel;
+    }
+    
+    
     public static IPackageFragment createTargetPackage() throws JavaModelException {
         final IPackageFragment mockIPackageFragment = mock(IPackageFragment.class);
         final IResource mockIResource = mock(IResource.class);

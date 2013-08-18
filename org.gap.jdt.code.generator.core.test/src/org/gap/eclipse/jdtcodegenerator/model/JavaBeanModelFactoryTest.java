@@ -37,7 +37,7 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
         assertThat(model.getImports().get(1).getImportDefinition()).as("Import Super").isEqualTo("java.util.Map");
 
-        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(5);
+        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(6);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");
         assertThat(model.getProperties().get(0).getType()).as("Property 0 Type").isEqualTo(String.class.getName());
         assertThat(model.getProperties().get(0).getGetterName()).as("Property 0 Getter").isEmpty();
@@ -63,12 +63,19 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getProperties().get(3).getComponentType()).as("Property 3 ComponentType").isEqualTo(
                 String.class.getName());
 
-        assertThat(model.getProperties().get(4).getName()).as("Property Super Name").isEqualTo("map");
-        assertThat(model.getProperties().get(4).getType()).as("Property Super Type").isEqualTo("Map");
-        assertThat(model.getProperties().get(4).getGetterName()).as("Property Super Getter").isEmpty();
-        assertThat(model.getProperties().get(4).getSetterName()).as("Property Super Setter").isEqualTo("setMap");
-        assertThat(model.getProperties().get(4).isArrayType()).as("Property Super ArrayType").isFalse();
-        assertThat(model.getProperties().get(4).getComponentType()).as("Property Super ComponentType").isEmpty();
+        assertThat(model.getProperties().get(4).getName()).as("Property Name").isEqualTo("status");
+        assertThat(model.getProperties().get(4).getType()).as("Property Type").isEqualTo("test.sample.SetterMethodDataSet.State");
+        assertThat(model.getProperties().get(4).getGetterName()).as("Property Getter").isEmpty();
+        assertThat(model.getProperties().get(4).getSetterName()).as("Property Setter").isEqualTo("setStatus");
+        assertThat(model.getProperties().get(4).isArrayType()).as("Property ArrayType").isFalse();
+        assertThat(model.getProperties().get(4).getComponentType()).as("Property ComponentType").isEmpty();
+
+        assertThat(model.getProperties().get(5).getName()).as("Property Super Name").isEqualTo("map");
+        assertThat(model.getProperties().get(5).getType()).as("Property Super Type").isEqualTo("Map");
+        assertThat(model.getProperties().get(5).getGetterName()).as("Property Super Getter").isEmpty();
+        assertThat(model.getProperties().get(5).getSetterName()).as("Property Super Setter").isEqualTo("setMap");
+        assertThat(model.getProperties().get(5).isArrayType()).as("Property Super ArrayType").isFalse();
+        assertThat(model.getProperties().get(5).getComponentType()).as("Property Super ComponentType").isEmpty();
     }
 
     @Test
@@ -82,7 +89,7 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getImports()).as("Import List").hasSize(1);
         assertThat(model.getImports().get(0).getImportDefinition()).as("Import").isEqualTo("java.util.Locale");
 
-        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(4);
+        assertThat(model.getProperties()).as("Model.Properties").isNotNull().hasSize(5);
         assertThat(model.getProperties().get(0).getName()).as("Property 0 Name").isEqualTo("name");
         assertThat(model.getProperties().get(0).getType()).as("Property 0 Type").isEqualTo(String.class.getName());
         assertThat(model.getProperties().get(0).getGetterName()).as("Property 0 Getter").isEmpty();
@@ -107,6 +114,12 @@ public class JavaBeanModelFactoryTest {
         assertThat(model.getProperties().get(3).isArrayType()).as("Property 3 ArrayType").isTrue();
         assertThat(model.getProperties().get(3).getComponentType()).as("Property 3 ComponentType").isEqualTo(
                 String.class.getName());
+
+        assertThat(model.getProperties().get(4).getName()).as("Property 5 Name").isEqualTo("status");
+        assertThat(model.getProperties().get(4).getType()).as("Property 5 Type").isEqualTo("test.sample.SetterMethodDataSet.State");
+        assertThat(model.getProperties().get(4).getGetterName()).as("Property 5 Getter").isEmpty();
+        assertThat(model.getProperties().get(4).getSetterName()).as("Property 5 Setter").isEmpty();
+        assertThat(model.getProperties().get(4).isArrayType()).as("Property 5 ArrayType").isFalse();
 
     }
 }

@@ -22,7 +22,7 @@ public final class JavaBeanModelFactoryTestData {
         final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
-        final IField[] mockFields = new IField[9];
+        final IField[] mockFields = new IField[10];
         final IImportDeclaration[] mockImports = new IImportDeclaration[1];
 
         when(mockCompilationUnit.getAllTypes()).thenReturn(new IType[] { mockType });
@@ -82,6 +82,11 @@ public final class JavaBeanModelFactoryTestData {
         when(mockFields[8].getTypeSignature()).thenReturn(
                 Signature.createArraySignature(Signature.createTypeSignature("java.lang.String", true), 1));
 
+        mockFields[9] = mock(IField.class);
+        when(mockFields[9].getFlags()).thenReturn(Flags.AccPublic);
+        when(mockFields[9].getElementName()).thenReturn("status");
+        when(mockFields[9].getTypeSignature()).thenReturn(Signature.createTypeSignature("test.sample.SetterMethodDataSet.State", true));
+
         when(mockType.getFields()).thenReturn(mockFields);
 
         return mockCompilationUnit;
@@ -91,7 +96,7 @@ public final class JavaBeanModelFactoryTestData {
         final ICompilationUnit mockCompilationUnit = mock(ICompilationUnit.class);
         final IType mockType = mock(IType.class);
         final IPackageFragment mockPackageFragment = mock(IPackageFragment.class);
-        final IMethod[] mockMethods = new IMethod[9];
+        final IMethod[] mockMethods = new IMethod[10];
         final IImportDeclaration[] mockImports = new IImportDeclaration[1];
         final ITypeHierarchy mockSuperITypeHierarchy = mock(ITypeHierarchy.class);
 
@@ -167,6 +172,12 @@ public final class JavaBeanModelFactoryTestData {
         when(mockMethods[8].getParameterTypes()).thenReturn(
                 new String[] { Signature.createArraySignature(Signature.createTypeSignature("java.lang.String", true),
                         1) });
+
+        mockMethods[9] = mock(IMethod.class);
+        when(mockMethods[9].getFlags()).thenReturn(Flags.AccPublic);
+        when(mockMethods[9].getElementName()).thenReturn("setStatus");
+        when(mockMethods[9].getParameterTypes()).thenReturn(
+                new String[] {Signature.createTypeSignature("test.sample.SetterMethodDataSet.State", true)});
 
         when(mockType.getMethods()).thenReturn(mockMethods);
 
