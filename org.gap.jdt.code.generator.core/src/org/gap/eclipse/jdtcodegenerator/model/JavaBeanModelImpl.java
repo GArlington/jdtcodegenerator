@@ -14,6 +14,7 @@ public class JavaBeanModelImpl implements JavaBeanModel {
     private final String className, packageName;
     private final List<JavaBeanProperty> beanProperties;
     private final List<JavaImport> javaImports;
+    private final List<String> innerTypeNames;
 
     /**
      * Creates a new model instance with the given parameters.
@@ -23,13 +24,15 @@ public class JavaBeanModelImpl implements JavaBeanModel {
      * @param packageName The fully qualified package name of the class.
      * @param beanProperties List of properties this class has.
      * @param javaImports List of imports definitions this class has.
+     * @param innerTypeNames List of inner class type names.
      */
     public JavaBeanModelImpl(String className, String packageName, List<JavaBeanProperty> beanProperties,
-            List<JavaImport> javaImports) {
+            List<JavaImport> javaImports, List<String> innerTypeNames) {
         this.className = className;
         this.packageName = packageName;
-        this.beanProperties = beanProperties;
-        this.javaImports = javaImports;
+        this.beanProperties = Collections.unmodifiableList(beanProperties);
+        this.javaImports = Collections.unmodifiableList(javaImports);
+        this.innerTypeNames = Collections.unmodifiableList(innerTypeNames);
     }
 
     @Override
@@ -44,12 +47,17 @@ public class JavaBeanModelImpl implements JavaBeanModel {
 
     @Override
     public List<JavaBeanProperty> getProperties() {
-        return Collections.unmodifiableList(beanProperties);
+        return beanProperties;
     }
 
     @Override
     public List<JavaImport> getImports() {
-        return Collections.unmodifiableList(javaImports);
+        return javaImports;
+    }
+
+    @Override
+    public List<String> getInnerTypeNames() {
+        return innerTypeNames;
     }
 
 }

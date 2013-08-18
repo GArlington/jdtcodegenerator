@@ -58,6 +58,8 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
         final List<JavaImport> imports = model.getImports();
         final Map<String, JavaImport> importsMap = toMap(imports);
         final List<JavaImport> newImportList = new ArrayList<JavaImport>();
+        final List<String> innerTypes = model.getInnerTypeNames(); // TODO: Make this a set for increase performance.
+        final String innerTypePrefix = model.getPackageName().concat(".").concat(model.getClassName()).concat(".");
 
         for (Iterator<JavaBeanProperty> iterator = clonedProperties.iterator(); iterator.hasNext();) {
             final JavaBeanProperty javaBeanProperty = iterator.next();
@@ -76,8 +78,13 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
                 final String type = (javaBeanProperty.isArrayType()) ? javaBeanProperty.getComponentType()
                         : javaBeanProperty.getType();
 
-                if (!primitiveTypeNames.contains(type) && !isJavaLang(type)) {
-                    newImportList.add(new JavaImport(model.getPackageName() + "." + type));
+                if (notFQN(type) && !primitiveTypeNames.contains(type) && notJavaLang(type)) {
+                    // Check for inner types.
+                    if (innerTypes.contains(type)) {
+                        newImportList.add(new JavaImport(innerTypePrefix.concat(type)));
+                    } else {
+                        newImportList.add(new JavaImport(model.getPackageName() + "." + type));
+                    }
                 }
             }
 
@@ -103,12 +110,17 @@ public final class CodeGeneratorModelFactoryImpl implements CodeGeneratorModelFa
         return importMap;
     }
 
-    private boolean isJavaLang(String type) {
+    private boolean notJavaLang(String type) {
         try {
             Class.forName("java.lang." + type);
-            return true;
-        } catch (ClassNotFoundException ex) {
             return false;
+        } catch (ClassNotFoundException ex) {
+            return true;
         }
     }
+
+    private boolean notFQN(String type) {
+        return !type.contains(".");
+    }
+
 }

@@ -40,4 +40,12 @@ public interface JavaBeanModel {
      * @return A list of JavaImport instances.
      */
     List<JavaImport> getImports();
+
+    /**
+     * Returns the simple class names of the public inner types defined inside this
+     * class.
+     * 
+     * @return A list of type names or empty if there is none.
+     */
+    List<String> getInnerTypeNames();
 }

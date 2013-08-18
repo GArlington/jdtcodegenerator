@@ -35,11 +35,22 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
     @Override
     public JavaBeanModel createModelForStandardBean(ICompilationUnit compilationUnit) throws ModelCreationException {
         try {
-            final IType classType = compilationUnit.getAllTypes()[0];
+            final IType[] allTypes = compilationUnit.getAllTypes();
+            final IType classType = allTypes[0];
             final List<IMethod> allMethods = getMethodsFromHierarchy(classType);
             final List<IImportDeclaration> imports = getImportsFromHierarchy(classType);
             final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allMethods.size());
             final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.size());
+            final ArrayList<String> innterTypeNames = new ArrayList<String>();
+
+            // Collect inner type names starting from index 1.
+            if (allTypes.length > 1) {
+                for (int i = 1; i < allTypes.length; i++) {
+                    if (Flags.isPublic(allTypes[i].getFlags())) {
+                        innterTypeNames.add(allTypes[i].getElementName());
+                    }
+                }
+            }
 
             // Collect imports
             for (IImportDeclaration importDef : imports) {
@@ -69,7 +80,7 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             }
 
             return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties, javaImports);
+                    beanProperties, javaImports, innterTypeNames);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {
@@ -89,12 +100,23 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             throws ModelCreationException {
 
         try {
-            final IType classType = compilationUnit.getAllTypes()[0];
+            final IType[] allTypes = compilationUnit.getAllTypes();
+            final IType classType = allTypes[0];
             final IField[] allFields = classType.getFields();
             final IImportDeclaration[] imports = compilationUnit.getImports();
 
             final ArrayList<JavaBeanProperty> beanProperties = new ArrayList<JavaBeanProperty>(allFields.length);
             final ArrayList<JavaImport> javaImports = new ArrayList<JavaImport>(imports.length);
+            final ArrayList<String> innterTypeNames = new ArrayList<String>();
+
+            // Collect inner type names starting from index 1.
+            if (allTypes.length > 1) {
+                for (int i = 1; i < allTypes.length; i++) {
+                    if (Flags.isPublic(allTypes[i].getFlags())) {
+                        innterTypeNames.add(allTypes[i].getElementName());
+                    }
+                }
+            }
 
             // Collect imports
             for (IImportDeclaration importDef : imports) {
@@ -119,7 +141,7 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
             }
 
             return new JavaBeanModelImpl(classType.getElementName(), classType.getPackageFragment().getElementName(),
-                    beanProperties, javaImports);
+                    beanProperties, javaImports, innterTypeNames);
         } catch (JavaModelException ex) {
             throw new ModelCreationException(ex);
         } catch (IllegalArgumentException ex) {
@@ -131,14 +153,16 @@ public class JavaBeanModelFactoryImpl implements JavaBeanModelFactory {
     public JavaBeanModel createModelWithImports(JavaBeanModel template, List<JavaImport> imports)
             throws ModelCreationException {
         return new JavaBeanModelImpl(template.getClassName(), template.getPackageName(),
-                new ArrayList<JavaBeanProperty>(template.getProperties()), new ArrayList<JavaImport>(imports));
+                new ArrayList<JavaBeanProperty>(template.getProperties()), new ArrayList<JavaImport>(imports),
+                new ArrayList<String>(template.getInnerTypeNames()));
     }
 
     @Override
     public JavaBeanModel createModelWithProperties(JavaBeanModel template, List<JavaBeanProperty> properties)
             throws ModelCreationException {
         return new JavaBeanModelImpl(template.getClassName(), template.getPackageName(),
-                new ArrayList<JavaBeanProperty>(properties), new ArrayList<JavaImport>(template.getImports()));
+                new ArrayList<JavaBeanProperty>(properties), new ArrayList<JavaImport>(template.getImports()),
+                new ArrayList<String>(template.getInnerTypeNames()));
     }
 
     private boolean isArrayType(String signature) {
