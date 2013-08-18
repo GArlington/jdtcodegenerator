@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.gap.jdt.code.generator.feature_1.0.0.201308031923.jar" id="org.gap.jdt.code.generator.feature" version="1.0.0.201308031923">
+   <feature url="features/org.gap.jdt.code.generator.feature_1.0.0.201308181952.jar" id="org.gap.jdt.code.generator.feature" version="1.0.0.201308181952">
       <category name="generator"/>
    </feature>
    <category-def name="generator" label="JDT Code Generator"/>
