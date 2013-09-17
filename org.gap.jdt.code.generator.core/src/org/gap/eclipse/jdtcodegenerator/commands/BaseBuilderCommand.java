@@ -1,6 +1,8 @@
 package org.gap.eclipse.jdtcodegenerator.commands;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -91,9 +93,21 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
                 // create a model and invoke generator.
                 JavaBeanModel beanModel = createSourceModelForCompilationUnit(compilationUnit);
 
+                // Search for existing builder if any and find properties
+                final Collection<String> existingBuilderProperties = findExistingBuilderProperties(compilationUnit,
+                        packageFragment);
+                final List<JavaBeanProperty> initialSelection = new ArrayList<JavaBeanProperty>(
+                        existingBuilderProperties.size());
+
+                for (JavaBeanProperty property : beanModel.getProperties()) {
+                    if (existingBuilderProperties.contains(property.getName())) {
+                        initialSelection.add(property);
+                    }
+                }
+
                 // Show the selection UI
                 GeneratorElementSelectionDialog elementSelectionDialog = new GeneratorElementSelectionDialog(PlatformUI
-                        .getWorkbench().getActiveWorkbenchWindow().getShell(), beanModel);
+                        .getWorkbench().getActiveWorkbenchWindow().getShell(), beanModel, initialSelection);
                 elementSelectionDialog.open();
                 List<JavaBeanProperty> result = toList(elementSelectionDialog.getResult());
                 if (!result.isEmpty()) {
@@ -121,6 +135,22 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
         }
 
         return null;
+    }
+
+    private Collection<String> findExistingBuilderProperties(ICompilationUnit src, IPackageFragment packageFragment)
+            throws ModelCreationException {
+        final ICompilationUnit destUnit = packageFragment.getCompilationUnit(src.getElementName().replaceFirst(
+                "\\.java", "Builder.java"));
+        if ((destUnit != null) && destUnit.exists()) {
+            final List<JavaBeanProperty> propertyList = getModelFactory().createModelForStandardBean(destUnit)
+                    .getProperties();
+            final List<String> propertyNameList = new ArrayList<String>(propertyList.size());
+            for (JavaBeanProperty property : propertyList) {
+                propertyNameList.add(property.getName());
+            }
+            return propertyNameList;
+        }
+        return Collections.emptyList();
     }
 
     /**
