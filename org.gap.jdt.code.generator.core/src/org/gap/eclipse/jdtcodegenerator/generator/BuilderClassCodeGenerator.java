@@ -54,7 +54,11 @@ public class BuilderClassCodeGenerator implements CodeGenerator<Void> {
 
         generator.setOutput(output);
         generator.setPrSrcPaths(model.getOutputDir());
-        generator.invoke(contextImpl);
+        try {
+            generator.invoke(contextImpl);
+        } catch (Exception ex) {
+            throw new CodeGenerationException(ex);
+        }
 
         return null;
     }

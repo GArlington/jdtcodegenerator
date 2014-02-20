@@ -11,12 +11,14 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.gap.eclipse.jdtcodegenerator.Activator;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGeneatorFactory;
 import org.gap.eclipse.jdtcodegenerator.generator.CodeGenerationException;
@@ -27,6 +29,7 @@ import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModel;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanModelFactory;
 import org.gap.eclipse.jdtcodegenerator.model.JavaBeanProperty;
 import org.gap.eclipse.jdtcodegenerator.model.ModelCreationException;
+import org.gap.eclipse.jdtcodegenerator.nl.Messages;
 import org.gap.eclipse.jdtcodegenerator.ui.GeneratorElementSelectionDialog;
 import org.gap.eclipse.jdtcodegenerator.ui.PackageSelectionDialog;
 
@@ -44,11 +47,14 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
 
     private final CodeGeneratorModelFactory codeGeneratorModelFactory;
 
+    private final StatusManager statusManager;
+
     public BaseBuilderCommand() {
         super();
         geneatorFactory = Activator.getDefault().getCodeGeneatorFactory();
         modelFactory = Activator.getDefault().getJavaBeanModelFactory();
         codeGeneratorModelFactory = Activator.getDefault().getCodeGeneratorModelFactory();
+        statusManager = StatusManager.getManager();
     }
 
     private List<JavaBeanProperty> toList(Object[] objects) {
@@ -83,7 +89,7 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
             final PackageSelectionDialog selectionDialog = new PackageSelectionDialog(PlatformUI.getWorkbench()
                     .getActiveWorkbenchWindow().getShell(), compilationUnit.getJavaProject());
 
-            selectionDialog.setTitle("Create builder class in");
+            selectionDialog.setTitle("Create builder class in"); //$NON-NLS-1$
             selectionDialog.open();
 
             final IPackageFragment packageFragment = selectionDialog.getSelectedPackage();
@@ -125,12 +131,16 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
             }
 
         } catch (ModelCreationException ex) {
+            showError(ex);
             throw new ExecutionException(ex.getMessage(), ex);
         } catch (CodeGenerationException ex) {
+            showError(ex);
             throw new ExecutionException(ex.getMessage(), ex);
         } catch (JavaModelException ex) {
+            showError(ex);
             throw new ExecutionException(ex.getMessage(), ex);
         } catch (CoreException ex) {
+            showError(ex);
             throw new ExecutionException(ex.getMessage(), ex);
         }
 
@@ -151,6 +161,11 @@ public abstract class BaseBuilderCommand extends AbstractHandler {
             return propertyNameList;
         }
         return Collections.emptyList();
+    }
+
+    private void showError(Throwable throwable) {
+        statusManager.handle(new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.BBC_GEN_FAILURE, throwable),
+                StatusManager.SHOW);
     }
 
     /**
